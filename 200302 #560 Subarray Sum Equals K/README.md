@@ -21,6 +21,18 @@ Simply summing every possible subarrays using two pointers (*i*: start index, *j
 
 **Space complexity**: *O*(1) for storing constant variable i, j, and cnt.
 
+'''
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        
+        cnt = 0
+        for i in range(len(nums)):
+            for j in range(len(nums)-i):
+                if k == sum(nums[i:i+j+1]):
+                    cnt += 1
+        return cnt
+'''
+
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200302%20%23560%20Subarray%20Sum%20Equals%20K/1st%20trial%20with%20brute%20force%20algorithm.PNG)
 
 ## 2<sup>nd</sup> trial
