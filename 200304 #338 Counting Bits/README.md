@@ -1,90 +1,58 @@
-# 200302 #560 Subarray Sum Equals K
-Link: https://leetcode.com/problems/subarray-sum-equals-k/
+# 200304 #338 Counting Bits
+Link: https://leetcode.com/problems/counting-bits/
 
 ## Description
-Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
 
 Example 1:
-    Input: nums = [1,1,1], k = 2
-    Output: 2
 
-Note:
-The length of the array is in range [1, 20,000].
-The range of numbers in the array is [-1000, 1000] and the range of the integer k is [-1e7, 1e7].
+    Input: 2
+    Output: [0,1,1]
+    Example 2:
+
+    Input: 5
+    Output: [0,1,1,2,1,2]
+    Follow up:
+
+It is very easy to come up with a solution with run time O(n*sizeof(integer)). But can you do it in linear time O(n) /possibly in a single pass?
+Space complexity should be O(n).
+Can you do it like a boss? Do it without using any builtin function like __builtin_popcount in c++ or in any other language.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Simply summing every possible subarrays using two pointers (*i*: start index, *j*: end index). Whenever the sum equals the target integer k, increment the *cnt*.
+For this kind of questions (I call these sequence questions), I usually start with finding the regularity of the sequence by simply listing up the elements. Here, the sequence would be
+
+    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+    0 1 1 2 1 2 2 3 1 2  2  3  2  3  3  4  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
+
+To see the regularity at a glance, I will parse the sequence like this.
+
+    0 | 1 | 2 3 | 4 5 6 7 | 8 9 10 11 12 13 14 15 | 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+    0 | 1 | 1 2 | 1 2 2 3 | 1 2  2  3  2  3  3  4 |  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
+
+For the i<sup>th</sup> phrase, the i-1<sup>th</sup> phrase is repeated once and (i-1<sup>th</sup> phrase + 1) follows. If you 
 
 ### Code
+'''python
+
     class Solution:
-        def subarraySum(self, nums: List[int], k: int) -> int:
-            cnt = 0
-            for i in range(len(nums)):
-                for j in range(len(nums)-i):
-                    if k == sum(nums[i:i+j+1]):
-                        cnt += 1
-            return cnt
+        def countBits(self, num: int) -> List[int]:
+
+            if num==0: return [0] #For
+            import math
+            iterNum=math.ceil(math.log2(num))
+            ans = [1]
+            for i in range(iterNum):
+                tmp=ans[pow(2,i)-1:pow(2,i+1)-1]
+                ans=ans+tmp+[i+1 for i in tmp]
+
+            return [0]+ans[0:num]
+'''
 
 ### Results
-**Time complexity**: *O*(n<sub>3</sub>), since considering every possible subarrays will take O(n^2) and summing step will take O(n).
+**Time complexity**: *O*(n) for incrementing the subarrays of *ans*. Note that time complexity is not *O(nlogn)*, since incrementing step occurs at most once for the elements in *ans*.
 
-**Space complexity**: *O*(1) for storing constant variable i, j, and cnt.
+**Space complexity**: *O*(n) for storing *tmp* and *ans* array.
 
-image here
-
-## 2<sup>nd</sup> trial
-
-### Intuition
-The need for time complexity improvement can be easily met by using cummulative sum (*subsum*), instead of using two pointers. This will yield the summation step to take O(1) instead of O(n).
-
-### Code
-    class Solution:
-        def subarraySum(self, nums: List[int], k: int) -> int:
-
-            ans = 0
-            for i in range(len(nums)):
-                subsum, cnt = 0, 0
-                while i+cnt < len(nums):
-                    subsum += nums[i+cnt]
-                    if k == subsum:
-                        ans += 1
-                    cnt += 1
-            return ans
-
-### Results
-**Time complexity**: *O*(n<sub>2/sub>), since considering every possible subarrays will take O(n^2). Note that summing step does **not** take O(n).
-    
-**Space complexity**: *O*(1) for storing constant variable i, subsum, and cnt.
-
-image here
-
-## 3<sup>rd</sup> trial
-
-### Intuition
-Summation of continuous subarrays can be viewed as the subtraction of two different ***cumulative subarrays***, both starting from the index 0. For instance, let's consider the string [a b c d e f g] as an input. Substring [d e f] can be considered as [a b c d e f] - [a b c] and sub string [c] can be viewed as [a b c] - [a b]. Note that the *second term* (e.g. [a b]) always be the substring of the *first term* (e.g. [a b c]).
-
-Therefore, if we store the summation value of *cumulative subarrays* in dictionary where the key is sum of *cumulative subarrays* and the value is the frequency of that sum, we can achieve the time performance of O(n). To be specific, while we iterate a loop for length of input string times, calculate *subsum* (the sum of *cumulative subarrays*), find whether "the *subsum* minus target *k*" is in the dictionary, and increment the *ans* only when the value exists in the dictionary. Here, *subsum* corresponds to the sum of *first term* and "the *subsum* minus target *k*" corresponds to the sum of *second term*. After this, store the *subsum* in the dictionary *subsumArray*.
-
-### Code
-    class Solution:
-        def subarraySum(self, nums: List[int], k: int) -> int:
-
-            ans, subsum, subsumArray = 0, 0, {0:1}
-            for i in range(len(nums)):
-                subsum += nums[i]
-                if subsum-k in subsumArray:
-                    ans += subsumArray[subsum-k]
-                if subsum in subsumArray:
-                    subsumArray[subsum] +=1
-                else:
-                    subsumArray[subsum] = 1
-            return ans
-            
-### Results
-**Time complexity**: *O*(n).
-    
-**Space complexity**: *O*(n) for storing the dictionary.
-
-image here
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200304%20%23338%20Counting%20Bits/1st%20trial.PNG)
