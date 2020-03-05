@@ -1,62 +1,49 @@
-# 200304 #338 Counting Bits
-Link: https://leetcode.com/problems/counting-bits/
+# 200305 #55 Jump Game
+Link: https://leetcode.com/problems/jump-game/
 
 ## Description
-Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
 
 Example 1:
 
-    Input: 2
-    Output: [0,1,1]
+    Input: [2,3,1,1,4]
+    Output: true
+    Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
     Example 2:
 
-    Input: 5
-    Output: [0,1,1,2,1,2]
-    Follow up:
-
-It is very easy to come up with a solution with run time O(n*sizeof(integer)). But can you do it in linear time O(n) /possibly in a single pass?
-Space complexity should be O(n).
-Can you do it like a boss? Do it without using any builtin function like __builtin_popcount in c++ or in any other language.
+    Input: [3,2,1,0,4]
+    Output: false
+    Explanation: You will always arrive at index 3 no matter what. Its maximum
+                 jump length is 0, which makes it impossible to reach the last index.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-For this kind of questions (I call these sequence questions), I usually start with finding the regularity of the sequence by simply listing up the elements. Here, the sequence would be
+The first thing that came up in my mind was greedy algorithm from the bottom using two pointers. 
 
-    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-    0 1 1 2 1 2 2 3 1 2  2  3  2  3  3  4  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
-
-To see the regularity at a glance, I will parse the sequence like this.
-
-    0 | 1 | 2 3 | 4 5 6 7 | 8 9 10 11 12 13 14 15 | 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-    0 | 1 | 1 2 | 1 2 2 3 | 1 2  2  3  2  3  3  4 |  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
-
-For the i<sup>th</sup> phrase, the i-1<sup>th</sup> phrase is repeated once and (i-1<sup>th</sup> phrase + 1) follows. You can easily parse the sequence by using logarithm and power.
+Suppose that there are two rabbits. **The first rabbit (called the supply rabbit)** moves one step at a time (pointer i), gathering and providing food for the second rabbit. **The second rabbit (called the scout rabbit)** can move only in the range (pointer j), where the supply rabbit can provide food. **The range** is defined by the amount of gathered food, which corresponds to the *nums[i]*. If the supply rabbit moves farther than the scout rabbit (i>j) or the scout rabbit travels to the end, their journey ends. Whether the scout rabbit saw the end would be the result of their journey. Although this fairy tale seems complicated a bit, the code is quite straightforward.
 
 ### Code
 ```python
 class Solution:
-    def countBits(self, num: int) -> List[int]:
-
-        if num==0: return [0] #exception handling to prevent log2(0) occurs
-        
-        import math
-        iterNum=math.ceil(math.log2(num))
-        
-        ans = [1] #initializing the ans list
-        for i in range(iterNum):
-            tmp=ans[pow(2,i)-1:pow(2,i+1)-1]
-            ans=ans+tmp+[i+1 for i in tmp]
-
-        return [0]+ans[0:num]
+    def canJump(self, nums: List[int]) -> bool:
+        i,j=0,0
+        while i<=j<len(nums):
+            j=max(j,i+nums[i])
+            i+=1
+        return j>=len(nums)-1
 ```
 
 ### Results
-**Time complexity**: *O*(n) for incrementing the subarrays of *ans*. Note that time complexity is not *O(nlogn)*, since incrementing step occurs at most once for the elements in *ans*.
+**Time complexity**: *O*(n) for a single pass through the *nums* array.
 
-**Space complexity**: *O*(n) for storing *tmp* and *ans* array.
+**Space complexity**: *O*(1) for storing constant *i* and *j*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200304%20%23338%20Counting%20Bits/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200305%20%2355%20Jump%20Game/1st%20trial.PNG)
 
 ### Discussions
-After I solved the problem as above, I realized that this may be easily solved by using dynamic programming, since *ans*[i] = *ans*[i//2]+i%2). This may result in better runtime and space performance.
+Although I thought this algorithm is fast and simple, its runtime and storage performance was not good enough. However, I cannot think of any better algorithm in a moment.
