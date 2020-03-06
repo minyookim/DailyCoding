@@ -1,62 +1,51 @@
-# 200304 #338 Counting Bits
-Link: https://leetcode.com/problems/counting-bits/
+# 200306 #264 Palindrome Linked List
+Link: https://leetcode.com/problems/palindrome-linked-list/
 
 ## Description
-Given a non negative integer number num. For every numbers i in the range 0 ≤ i ≤ num calculate the number of 1's in their binary representation and return them as an array.
+Given a singly linked list, determine if it is a palindrome.
 
-Example 1:
+**Example 1:**
 
-    Input: 2
-    Output: [0,1,1]
+    Input: 1->2
+    Output: false
     Example 2:
 
-    Input: 5
-    Output: [0,1,1,2,1,2]
-    Follow up:
+    Input: 1->2->2->1
+    Output: true
 
-It is very easy to come up with a solution with run time O(n*sizeof(integer)). But can you do it in linear time O(n) /possibly in a single pass?
-Space complexity should be O(n).
-Can you do it like a boss? Do it without using any builtin function like __builtin_popcount in c++ or in any other language.
+**Follow up:**
+Could you do it in O(n) time and O(1) space?
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-For this kind of questions (I call these sequence questions), I usually start with finding the regularity of the sequence by simply listing up the elements. Here, the sequence would be
-
-    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-    0 1 1 2 1 2 2 3 1 2  2  3  2  3  3  4  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
-
-To see the regularity at a glance, I will parse the sequence like this.
-
-    0 | 1 | 2 3 | 4 5 6 7 | 8 9 10 11 12 13 14 15 | 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-    0 | 1 | 1 2 | 1 2 2 3 | 1 2  2  3  2  3  3  4 |  1  2  2  3  2  3  3  4  2  3  3  4  3  4  4  5
-
-For the i<sup>th</sup> phrase, the i-1<sup>th</sup> phrase is repeated once and (i-1<sup>th</sup> phrase + 1) follows. You can easily parse the sequence by using logarithm and power.
+First, find the middle point of the linked list using two pointers, one moving twice faster than the other one. Next, make a reverse linked list from the middle point. In the end, check whether the value of newly made reversed linked list match with the provided linked list.
 
 ### Code
 ```python
 class Solution:
-    def countBits(self, num: int) -> List[int]:
-
-        if num==0: return [0] #exception handling to prevent log2(0) occurs
+    def isPalindrome(self, head: ListNode) -> bool:
         
-        import math
-        iterNum=math.ceil(math.log2(num))
+        i, j, newHead = head, head, None
         
-        ans = [1] #initializing the ans list
-        for i in range(iterNum):
-            tmp=ans[pow(2,i)-1:pow(2,i+1)-1]
-            ans=ans+tmp+[i+1 for i in tmp]
-
-        return [0]+ans[0:num]
+        while i and i.next:
+            i, j = i.next.next, j.next
+        
+        while j:
+            tmp, j.next, newHead = j.next, newHead, j
+            j = tmp
+        
+        while newHead:
+            if head.val != newHead.val:
+                return False
+            head, newHead = head.next, newHead.next
+        
+        return True
 ```
 
 ### Results
-**Time complexity**: *O*(n) for incrementing the subarrays of *ans*. Note that time complexity is not *O(nlogn)*, since incrementing step occurs at most once for the elements in *ans*.
+**Time complexity**: *O*(n) for finding the middle point, making another linked list, and checking the value during a single-pass.
 
-**Space complexity**: *O*(n) for storing *tmp* and *ans* array.
+**Space complexity**: *O*(1) for storing *i*, *j*, *tmp*. Note that it is not *O*(n), since it utilizes and modifies the premade linked list.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200304%20%23338%20Counting%20Bits/1st%20trial.PNG)
-
-### Discussions
-After I solved the problem as above, I realized that this may be easily solved by using dynamic programming, since *ans*[i] = *ans*[i//2]+i%2). This may result in better runtime and space performance.
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200306%20%23234%20Palindrome%20Linked%20List/1st%20trial.PNG)
