@@ -1,52 +1,53 @@
-# 200309 #19 Remove Nth Node From End of List
-Link: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+# 200310 #406 Queue Reconstruction by Height
+Link: https://leetcode.com/problems/queue-reconstruction-by-height/
 
 ## Description
-Given a linked list, remove the n-th node from the end of list and return its head.
-
-**Example:**
-
-    Given linked list: 1->2->3->4->5, and n = 2.
-    After removing the second node from the end, the linked list becomes 1->2->3->5.
+Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
 
 **Note:**
+The number of people is less than 1,100.
 
-Given n will always be valid.
+**Example**
 
-**Follow up:**
+    Input:
+    [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
 
-Could you do this in one pass?
+    Output:
+    [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Here I will use two pointers, *target* and *tmp*. *Target* marks the (n-1)-th node before the *Tmp*. As *Tmp* moves along the linked list and reaches at the end of the linked list, *Target* will point the (n-1)-th node from the end of list. Remove the next node of the target will yield the answer.
+To simplify the question, let's assume that there is no one of same height. Then, by definition, the tallest person, which means one having highest h, the k value of the person will be 0. The k value of the second tallest person should be 0 or 1. If the value is 0, the second tallest person should be at the front of the tallest person. Otherwise, the second tallest person should be at the back. If we extends further, we can solve this problem just by sorting the array by decreasing order and inserting the person at the k-th index.
+
+If there is multiple persons with same height, we can simply treat them as the one with the larger k is taller than the one with the smaller k.
 
 ### Code
 ```python
 class Solution:
-    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
         
-        target = tmp = head
+        ans = []
         
-        for i in range(n):
-            tmp = tmp.next
+        from operator import itemgetter
+        people.sort(key=itemgetter(1))
+        people.sort(key=itemgetter(0), reverse=True)
         
-        if not tmp:
-            return head.next
+        for i in people:
+            ans.insert(i[1], i)
         
-        while tmp and tmp.next:
-            target = target.next
-            tmp = tmp.next
-
-        target.next = target.next.next
-        
-        return head
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for a single-pass of the given linked list.
+**Time complexity**: *O*(n<sup>2</sup>) for inserting the n elements. You can check this website for the further information (https://wayhome25.github.io/python/2017/06/14/time-complexity/).
 
-**Space complexity**: *O*(1) for storing *tmp* and *target*.
+**Space complexity**: *O*(n) for storing *ans*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200309%20%2319%20Remove%20Nth%20Node%20From%20End%20of%20List/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/1st%20trial.PNG)
+
+## Discussions
+After solving the problem, I found this website (https://stackoverflow.com/questions/6666748/python-sort-list-of-lists-ascending-and-then-decending), stating that lambda expression can be used instead of itemgetter. This yields slightly better runtime and space performance.
+
+![2nd trial]
+(https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/2nd%20trial.PNG)
