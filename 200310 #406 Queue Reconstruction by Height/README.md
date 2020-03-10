@@ -49,5 +49,4 @@ class Solution:
 ## Discussions
 After solving the problem, I found this website (https://stackoverflow.com/questions/6666748/python-sort-list-of-lists-ascending-and-then-decending), stating that lambda expression can be used instead of itemgetter. This yields slightly better runtime and space performance.
 
-![2nd trial]
-(https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/2nd%20trial.PNG)
+![2nd trial](https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/2nd%20trial.PNG)
