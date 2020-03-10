@@ -30,7 +30,7 @@ Simply summing every possible subarrays using two pointers (*i*: start index, *j
             return cnt
 
 ### Results
-**Time complexity**: *O*(n<sub>3</sub>), since considering every possible subarrays will take O(n^2) and summing step will take O(n).
+**Time complexity**: *O*(n<sup>3</sup>), since considering every possible subarrays will take O(n^2) and summing step will take O(n).
 
 **Space complexity**: *O*(1) for storing constant variable i, j, and cnt.
 
@@ -56,7 +56,7 @@ The need for time complexity improvement can be easily met by using cummulative 
             return ans
 
 ### Results
-**Time complexity**: *O*(n<sub>2/sub>), since considering every possible subarrays will take O(n^2). Note that summing step does **not** take O(n).
+**Time complexity**: *O*(n<sup>2</sup>), since considering every possible subarrays will take O(n^2). Note that summing step does **not** take O(n).
     
 **Space complexity**: *O*(1) for storing constant variable i, subsum, and cnt.
 
