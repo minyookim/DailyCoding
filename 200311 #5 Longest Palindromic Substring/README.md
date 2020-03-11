@@ -1,52 +1,52 @@
-# 200310 #406 Queue Reconstruction by Height
-Link: https://leetcode.com/problems/queue-reconstruction-by-height/
+# 200311 #5 Longest Palindromic Substring
+Link: https://leetcode.com/problems/longest-palindromic-substring/
 
 ## Description
-Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
 
-**Note:**
-The number of people is less than 1,100.
+**Example 1:**
 
-**Example**
+    Input: "babad"
+    Output: "bab"
+    Note: "aba" is also a valid answer.
 
-    Input:
-    [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+**Example 2:**
 
-    Output:
-    [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+    Input: "cbbd"
+    Output: "bb"
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-To simplify the question, let's assume that there is no one of same height. Then, by definition, the tallest person, which means one having highest h, the k value of the person will be 0. The k value of the second tallest person should be 0 or 1. If the value is 0, the second tallest person should be at the front of the tallest person. Otherwise, the second tallest person should be at the back. If we extends further, we can solve this problem just by sorting the array by decreasing order and inserting the person at the k-th index.
-
-If there is multiple persons with same height, we can simply treat them as the one with the larger k is taller than the one with the smaller k.
+Perhaps the easiest way to solve this question may be brute-force algorithm, which scans all the substrings and return the longest palindromic substring. Here, two pointers *i* and *j* indicates the start and end index of the substring. Using two pointers, make *subs* and *rev*, the reverse of *subs*. Then, check the palindromicity by examining whether the *subs* eqauls *rev*. If so and the *subs* is longer than previous palindromic substring, update the *ans*.
 
 ### Code
 ```python
 class Solution:
-    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
+    def longestPalindrome(self, s: str) -> str:
         
-        ans = []
+        ans = ''
         
-        from operator import itemgetter
-        people.sort(key=itemgetter(1))
-        people.sort(key=itemgetter(0), reverse=True)
-        
-        for i in people:
-            ans.insert(i[1], i)
+        for i in range(len(s)):
+            for j in range(len(s)-i+1):
+                subs = s[i:i+j]
+                rev = subs[::-1]
+                
+                if subs == rev:
+                    if len(subs)>len(ans):
+                        ans = subs
         
         return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) for inserting the n elements. You can check this website for the further information (https://wayhome25.github.io/python/2017/06/14/time-complexity/).
+**Time complexity**: *O*(n<sup>3</sup>) for checking the O(n<sup>2</sup>) substrings. 
 
-**Space complexity**: *O*(n) for storing *ans*.
+**Space complexity**: *O*(n) for storing *subs* and *rev*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200311%20%235%20Longest%20Palindromic%20Substring/1st%20trial.PNG)
 
 ## Discussions
-After solving the problem, I found this website (https://stackoverflow.com/questions/6666748/python-sort-list-of-lists-ascending-and-then-decending), stating that lambda expression can be used instead of itemgetter. This yields slightly better runtime and space performance.
+Initially, I thought that this would exceed time limit, but it worked. However, due to the poor runtime performance, I should come up with better algorithms. 
 
-![2nd trial](https://github.com/minyookim/DailyCoding/blob/master/200310%20%23406%20Queue%20Reconstruction%20by%20Height/2nd%20trial.PNG)
+One possible idea is using seeds, which I will implement and discuss it on weekends.
