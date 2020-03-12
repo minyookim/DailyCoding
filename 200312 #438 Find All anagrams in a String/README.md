@@ -64,7 +64,7 @@ class Solution:
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>nk</sup>) for checking the n-k substrings. Each check will cost O(k). Here, n means length of *s* and k indicates length of *p*.
+**Time complexity**: *O*(nk) for checking the n-k substrings. Each check will cost O(k). Here, n means length of *s* and k indicates length of *p*.
 
 **Space complexity**: *O*(n) for storing *subs* and *tmp*.
 
@@ -103,7 +103,7 @@ class Solution:
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>nk</sup>) as same as above, but improved slightly by using Counter method.
+**Time complexity**: *O*(nk) as same as above, but improved slightly by using Counter method.
 
 **Space complexity**: *O*(n) for storing *subs* and *tmp*.
 
