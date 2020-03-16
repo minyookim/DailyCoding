@@ -1,52 +1,76 @@
-# 200311 #5 Longest Palindromic Substring
-Link: https://leetcode.com/problems/longest-palindromic-substring/
+# 200316 #647 Palindromic Substring
+Link: https://leetcode.com/problems/palindromic-substrings/
 
 ## Description
-Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+Given a string, your task is to count how many palindromic substrings in this string.
 
-**Example 1:**
+The substrings with different start indexes or end indexes are counted as different substrings even they consist of same characters.
 
-    Input: "babad"
-    Output: "bab"
-    Note: "aba" is also a valid answer.
+    Example 1:
 
-**Example 2:**
+    Input: "abc"
+    Output: 3
+    Explanation: Three palindromic strings: "a", "b", "c".
 
-    Input: "cbbd"
-    Output: "bb"
+
+    Example 2:
+
+    Input: "aaa"
+    Output: 6
+    Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+ 
+
+**Note:**
+
+The input string length won't exceed 1000.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Perhaps the easiest way to solve this question may be brute-force algorithm, which scans all the substrings and return the longest palindromic substring. Here, two pointers *i* and *j* indicates the start and end index of the substring. Using two pointers, make *subs* and *rev*, the reverse of *subs*. Then, check the palindromicity by examining whether the *subs* eqauls *rev*. If so and the *subs* is longer than previous palindromic substring, update the *ans*.
+Here I used the algorihm that finds and utilizes the seeds for the palindromic substrings. First, I listed the seeds with length 1 or 2. For example, in a word 'banana', the seed will be ['a', 'n', 'a', 'n']. The substrings with 2 same letters can be seeds, such as 
+'mm' in 'common'.
+
+Then, expand the seeds by checking whether the s[a-1] is same as s[b+1] where (a, b) is the index of the first and last letter of palindromic seeds.
 
 ### Code
 ```python
 class Solution:
-    def longestPalindrome(self, s: str) -> str:
+    def countSubstrings(self, s: str) -> int:
         
-        ans = ''
+        # Initialization
+        if len(s)<2:
+            return len(s)
+        idx =[]
         
-        for i in range(len(s)):
-            for j in range(len(s)-i+1):
-                subs = s[i:i+j]
-                rev = subs[::-1]
-                
-                if subs == rev:
-                    if len(subs)>len(ans):
-                        ans = subs
+        # Seed for palindromic substrings
+        for i in range(1,len(s)-1): #palindromic strings with length = 1
+            idx.append((i,i))
+        
+        for i in range(1, len(s)): #palindromic strings with length = 2
+            if s[i-1] == s[i]:
+                idx.append((i-1,i))
+        
+        # Counting expanded palindromic substrings from the seeds
+        ans = len(idx)+2 #for (0,0) and (len(s)-1, len(s))
+        
+        while idx:
+            (i,j)=idx.pop()
+            if i>0 and j<len(s)-1:
+                if s[i-1] == s[j+1]:
+                    ans += 1
+                    idx.append((i-1,j+1))
         
         return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>3</sup>) for checking the O(n<sup>2</sup>) substrings. 
+**Time complexity**: *O*(n<sup>2</sup>) for checking the expanding O(n) seeds. 
 
-**Space complexity**: *O*(n) for storing *subs* and *rev*.
+**Space complexity**: *O*(n) for storing *idx*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200311%20%235%20Longest%20Palindromic%20Substring/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200316%20%23647%20Palindromic%20Substrings/1st%20trial.PNG)
 
 ## Discussions
-Initially, I thought that this would exceed time limit, but it worked. However, due to the poor runtime performance, I should come up with better algorithms. 
+I implemented the seed algorithm, which can be used in multiple other problems I solved.
 
-One possible idea is using seeds, which I will implement and discuss it on weekends.
+While I'm working on this problem, I found the Manacher's Algorithm can solve this question within O(n) runtime. Implementing this will lead to improvement in runtime performance.
