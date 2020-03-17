@@ -1,23 +1,27 @@
-# 200316 #647 Palindromic Substring
-Link: https://leetcode.com/problems/palindromic-substrings/
+# 200317 #240 Search a 2D Matrix II
+Link: https://leetcode.com/problems/search-a-2d-matrix-ii/
 
 ## Description
-Given a string, your task is to count how many palindromic substrings in this string.
+Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
 
-The substrings with different start indexes or end indexes are counted as different substrings even they consist of same characters.
+Integers in each row are sorted in ascending from left to right.
+Integers in each column are sorted in ascending from top to bottom.
 
-    Example 1:
+Example:
 
-    Input: "abc"
-    Output: 3
-    Explanation: Three palindromic strings: "a", "b", "c".
+Consider the following matrix:
 
+    [
+      [1,   4,  7, 11, 15],
+      [2,   5,  8, 12, 19],
+      [3,   6,  9, 16, 22],
+      [10, 13, 14, 17, 24],
+      [18, 21, 23, 26, 30]
+    ]
+    
+Given target = 5, return true.
 
-    Example 2:
-
-    Input: "aaa"
-    Output: 6
-    Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+Given target = 20, return false.
  
 
 **Note:**
@@ -27,50 +31,88 @@ The input string length won't exceed 1000.
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Here I used the algorihm that finds and utilizes the seeds for the palindromic substrings. First, I listed the seeds with length 1 or 2. For example, in a word 'banana', the seed will be ['a', 'n', 'a', 'n']. The substrings with 2 same letters can be seeds, such as 
-'mm' in 'common'.
-
-Then, expand the seeds by checking whether the s[a-1] is same as s[b+1] where (a, b) is the index of the first and last letter of palindromic seeds.
+Since integers in each row or column are sorted, we can apply binary search algorithm to each row to search the target. Iterating this to every row will answer the question.
 
 ### Code
 ```python
 class Solution:
-    def countSubstrings(self, s: str) -> int:
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
         
-        # Initialization
-        if len(s)<2:
-            return len(s)
-        idx =[]
+        if not matrix: return False
         
-        # Seed for palindromic substrings
-        for i in range(1,len(s)-1): #palindromic strings with length = 1
-            idx.append((i,i))
+        numcol = len(matrix[0])
         
-        for i in range(1, len(s)): #palindromic strings with length = 2
-            if s[i-1] == s[i]:
-                idx.append((i-1,i))
-        
-        # Counting expanded palindromic substrings from the seeds
-        ans = len(idx)+2 #for (0,0) and (len(s)-1, len(s))
-        
-        while idx:
-            (i,j)=idx.pop()
-            if i>0 and j<len(s)-1:
-                if s[i-1] == s[j+1]:
-                    ans += 1
-                    idx.append((i-1,j+1))
-        
-        return ans
+        for i in range(numrow):
+            l, r = 0, numcol-1
+            while l<=r:
+                m = (l+r)//2
+                if matrix[i][m] < target:
+                    l = m+1
+                elif matrix[i][m] > target:
+                    r = m-1
+                else:
+                    return True
+                        
+        return False
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) for checking the expanding O(n) seeds. 
+**Time complexity**: *O*(n<sup>log m</sup>), where n and m are the number of row and column, respectively. log m for binary search algorithm and n for iterating in every row.
 
-**Space complexity**: *O*(n) for storing *idx*.
+**Space complexity**: *O*(1) for storing *l*, *r*, *m*, *numrow*, and *numcol* .
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200316%20%23647%20Palindromic%20Substrings/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200317%20%23240%20Search%20a%202D%20Matrix%20II/1st%20trial.PNG)
+
+## 2<sup>nd</sup> trial
+
+### Intuition
+Although the algorithm above can solve the question, it only utilizes one property (Integers in each row are sorted in ascending from left to right), but not the other (Integers in each column are sorted in ascending from top to bottom).
+
+One way to utilize both properties is zig-zag search. The rule is simple:
+
+    1. Start at the rightmost integer in the first row.
+    2. If the target exceeds the integer value, every value in the first row is smaller than the target. Therefore, you can skip the first row and move to the second row.
+    3. If the rightmost integer in the second row is larger than the target, move left until the value exceeds or is same as the target.
+    4. If the value exceeds the target, for the same reason in 2, you can skip to search the other values and move to the next row.
+    5. Repeat this algorithm to find the target.
+Since integers in each row or column are sorted, we can apply binary search algorithm to each row to search the target. Iterating this to every row will answer the question.
+
+### Code
+```python
+class Solution:
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
+        
+        if not matrix: return False
+        
+        row, col = 0, len(matrix[0])-1
+        
+        while row < len(matrix) and col >=0:
+            if matrix[row][col]>target:
+                col += -1
+            elif matrix[row][col]<target:
+                row += 1
+            else:
+                return True
+
+        return False
+```
+
+### Results
+**Time complexity**: *O*(n+m) for checking n + m values.
+
+**Space complexity**: *O*(1) for storing *row*, and *col* .
+
+![2nd trial](https://github.com/minyookim/DailyCoding/blob/master/200317%20%23240%20Search%20a%202D%20Matrix%20II/2nd%20trial.PNG)
 
 ## Discussions
-I implemented the seed algorithm, which can be used in multiple other problems I solved.
-
-While I'm working on this problem, I found the Manacher's Algorithm can solve this question within O(n) runtime. Implementing this will lead to improvement in runtime performance.
+Although the both algorithm seems similar in terms of space complexity, the below one outperforms the above one.
