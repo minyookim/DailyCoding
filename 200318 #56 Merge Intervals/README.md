@@ -44,7 +44,7 @@ class Solution:
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>logn</sup>) for sorting the intervals.
+**Time complexity**: *O*(nlogn) for sorting the intervals.
 
 **Space complexity**: *O*(n) for storing *ans*.
 
