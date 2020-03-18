@@ -1,114 +1,51 @@
-# 200317 #240 Search a 2D Matrix II
-Link: https://leetcode.com/problems/search-a-2d-matrix-ii/
+# 200318 #56 Merge Intervals
+Link: https://leetcode.com/problems/merge-intervals/
 
 ## Description
-Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+Given a collection of intervals, merge all overlapping intervals.
 
-    Integers in each row are sorted in ascending from left to right.
-    Integers in each column are sorted in ascending from top to bottom.
+**Example 1:**
 
-**Example:**
+    Input: [[1,3],[2,6],[8,10],[15,18]]
+    Output: [[1,6],[8,10],[15,18]]
+    Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
 
-Consider the following matrix:
+**Example 2:**
 
-    [
-      [1,   4,  7, 11, 15],
-      [2,   5,  8, 12, 19],
-      [3,   6,  9, 16, 22],
-      [10, 13, 14, 17, 24],
-      [18, 21, 23, 26, 30]
-    ]
-    
-Given target = 5, return true.
+    Input: [[1,4],[4,5]]
+    Output: [[1,5]]
+    Explanation: Intervals [1,4] and [4,5] are considered overlapping.
 
-Given target = 20, return false.
- 
+**NOTE**: input types have been changed on April 15, 2019. Please reset to default code definition to get new method signature.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Since integers in each row or column are sorted, we can apply binary search algorithm to each row to search the target. Iterating this to every row will answer the question.
+Here I implemented rule-based algorithm. First, sort the list by the first element. Then, you have to do is comparing whether the second element of the former is smaller than the first element of the latter. If so, append the former and move to the next interval. If not, merge the two intervals. While merging, compare whether the second element of the latter is larger than that of the former and if so, change the second element of the former into that of the latter.
 
 ### Code
 ```python
 class Solution:
-    def searchMatrix(self, matrix, target):
-        """
-        :type matrix: List[List[int]]
-        :type target: int
-        :rtype: bool
-        """
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         
-        if not matrix: return False
+        intervals.sort()
         
-        numcol = len(matrix[0])
+        if not intervals: return intervals
+        ans = [intervals[0]]
         
-        for i in range(numrow):
-            l, r = 0, numcol-1
-            while l<=r:
-                m = (l+r)//2
-                if matrix[i][m] < target:
-                    l = m+1
-                elif matrix[i][m] > target:
-                    r = m-1
-                else:
-                    return True
-                        
-        return False
-```
-
-### Results
-**Time complexity**: *O*(n<sup>log m</sup>), where n and m are the number of row and column, respectively. log m for binary search algorithm and n for iterating in every row.
-
-**Space complexity**: *O*(1) for storing *l*, *r*, *m*, *numrow*, and *numcol* .
-
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200317%20%23240%20Search%20a%202D%20Matrix%20II/1st%20trial.PNG)
-
-## 2<sup>nd</sup> trial
-
-### Intuition
-Although the algorithm above can solve the question, it only utilizes one property (Integers in each row are sorted in ascending from left to right), but not the other (Integers in each column are sorted in ascending from top to bottom).
-
-One way to utilize both properties is zig-zag search. The rule is simple:
-
-    1. Start at the rightmost integer in the first row.
-    2. If the target exceeds the integer value, every value in the first row is smaller than the target. Therefore, you can skip the first row and move to the second row.
-    3. If the rightmost integer in the second row is larger than the target, move left until the value exceeds or is same as the target.
-    4. If the value exceeds the target, for the same reason in 2, you can skip to search the other values and move to the next row.
-    5. Repeat this algorithm to find the target.
-Since integers in each row or column are sorted, we can apply binary search algorithm to each row to search the target. Iterating this to every row will answer the question.
-
-### Code
-```python
-class Solution:
-    def searchMatrix(self, matrix, target):
-        """
-        :type matrix: List[List[int]]
-        :type target: int
-        :rtype: bool
-        """
-        
-        if not matrix: return False
-        
-        row, col = 0, len(matrix[0])-1
-        
-        while row < len(matrix) and col >=0:
-            if matrix[row][col]>target:
-                col += -1
-            elif matrix[row][col]<target:
-                row += 1
+        for i in range(1, len(intervals)):
+            if ans[-1][1] < intervals[i][0]:
+                ans.append(intervals[i])
             else:
-                return True
-
-        return False
+                if ans[-1][1] < intervals[i][1]:
+                    ans[-1][1] = intervals[i][1]
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n+m) for checking n + m values.
+**Time complexity**: *O*(n<sup>logn</sup>) for sorting the intervals.
 
-**Space complexity**: *O*(1) for storing *row*, and *col* .
+**Space complexity**: *O*(n) for storing *ans*.
 
-![2nd trial](https://github.com/minyookim/DailyCoding/blob/master/200317%20%23240%20Search%20a%202D%20Matrix%20II/2nd%20trial.PNG)
-
-## Discussions
-Although the both algorithm seems similar in terms of space complexity, the below one outperforms the above one.
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200318%20%2356%20Merge%20Intervals/1st%20trial.PNG)
