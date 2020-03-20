@@ -1,51 +1,75 @@
-# 200318 #56 Merge Intervals
-Link: https://leetcode.com/problems/merge-intervals/
+# 200320 #155 Min Stack
+Link: https://leetcode.com/problems/min-stack/
 
 ## Description
-Given a collection of intervals, merge all overlapping intervals.
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
 
-**Example 1:**
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+ 
 
-    Input: [[1,3],[2,6],[8,10],[15,18]]
-    Output: [[1,6],[8,10],[15,18]]
-    Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+**Example:**
 
-**Example 2:**
-
-    Input: [[1,4],[4,5]]
-    Output: [[1,5]]
-    Explanation: Intervals [1,4] and [4,5] are considered overlapping.
-
-**NOTE**: input types have been changed on April 15, 2019. Please reset to default code definition to get new method signature.
+    MinStack minStack = new MinStack();
+    minStack.push(-2);
+    minStack.push(0);
+    minStack.push(-3);
+    minStack.getMin();   --> Returns -3.
+    minStack.pop();
+    minStack.top();      --> Returns 0.
+    minStack.getMin();   --> Returns -2.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Here I implemented rule-based algorithm. First, sort the list by the first element. Then, you have to do is comparing whether the second element of the former is smaller than the first element of the latter. If so, append the former and move to the next interval. If not, merge the two intervals. While merging, compare whether the second element of the latter is larger than that of the former and if so, change the second element of the former into that of the latter.
+The only way to remove values in this min stack is using pop, which removes the element on top of the stack. This data structure has two properties:
+
+    1. The order of the inputs is conserved
+    2. Minimum value at specific timepoint keeps monotonically decreasing as the inputs get in.
+        Input:          3 2 4 1 5 6 8 0
+        Minimum value:  3 2 2 1 1 1 1 0
+
+By utilizing these two properties, I implemented the min stack as below:
 
 ### Code
 ```python
-class Solution:
-    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+class MinStack:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.stack = []
+        self.minArray = []
+
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        if not self.minArray or x<=self.minArray[-1]:
+            self.minArray.append(x)
+    
+    def pop(self) -> None:
+        if not self.stack:
+            return
         
-        intervals.sort()
+        pop = self.stack.pop()
         
-        if not intervals: return intervals
-        ans = [intervals[0]]
+        if pop == self.minArray[-1]:
+            self.minArray.pop()
         
-        for i in range(1, len(intervals)):
-            if ans[-1][1] < intervals[i][0]:
-                ans.append(intervals[i])
-            else:
-                if ans[-1][1] < intervals[i][1]:
-                    ans[-1][1] = intervals[i][1]
-        
-        return ans
+        return pop          
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.minArray[-1]
 ```
 
 ### Results
-**Time complexity**: *O*(nlogn) for sorting the intervals.
+**Time complexity**: *O*(1) for every operations.
 
-**Space complexity**: *O*(n) for storing *ans*.
+**Space complexity**: *O*(n) for storing *stack* (and *minArray* in the worst case).
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200318%20%2356%20Merge%20Intervals/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200320%20%23155%20Min%20Stack/1st%20trial.PNG)
