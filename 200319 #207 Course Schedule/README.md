@@ -70,4 +70,4 @@ class Solution:
 
 **Space complexity**: *O*(n+e) for storing *graph*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200319%20%23207%20Course%20Schedule/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200319%20%23207%20Course%20Schedule/trial%201.PNG)
