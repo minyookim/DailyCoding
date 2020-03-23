@@ -1,75 +1,75 @@
-# 200320 #155 Min Stack
-Link: https://leetcode.com/problems/min-stack/
+# 200323 #98 Validate Binary Search Tree
+Link: https://leetcode.com/problems/validate-binary-search-tree/
 
 ## Description
-Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+Given a binary tree, determine if it is a valid binary search tree (BST).
 
-push(x) -- Push element x onto stack.
-pop() -- Removes the element on top of the stack.
-top() -- Get the top element.
-getMin() -- Retrieve the minimum element in the stack.
+Assume a BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
  
 
-**Example:**
+**Example 1:**
 
-    MinStack minStack = new MinStack();
-    minStack.push(-2);
-    minStack.push(0);
-    minStack.push(-3);
-    minStack.getMin();   --> Returns -3.
-    minStack.pop();
-    minStack.top();      --> Returns 0.
-    minStack.getMin();   --> Returns -2.
+        2
+       / \
+      1   3
+
+    Input: [2,1,3]
+    Output: true
+
+**Example 2:**
+
+        5
+       / \
+      1   4
+         / \
+        3   6
+
+    Input: [5,1,4,null,null,3,6]
+    Output: false
+    Explanation: The root node's value is 5 but its right child's value is 4.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-The only way to remove values in this min stack is using pop, which removes the element on top of the stack. This data structure has two properties:
+Binary search tree should obey these two rules:
 
-    1. The order of the inputs is conserved
-    2. Minimum value at specific timepoint keeps monotonically decreasing as the inputs get in.
-        Input:          3 2 4 1 5 6 8 0
-        Minimum value:  3 2 2 1 1 1 1 0
+    The left subtree of a node contains only nodes with keys less than the node's key.
+    The right subtree of a node contains only nodes with keys greater than the node's key.
 
-By utilizing these two properties, I implemented the min stack as below:
+Importantly, this rule means not only the left child node is less than the parent node, but also means all the nodes in the left subtreee is less than the parent node. Therefore, checking not only the direct parent, but also the grander parents, is mandatory.
+
+To solve this question, the algorithm should check every nodes in the binary search tree, which can be implemented by either recursively or iteratively. Here I used iteration to check every node.
 
 ### Code
 ```python
-class MinStack:
-
-    def __init__(self):
-        """
-        initialize your data structure here.
-        """
-        self.stack = []
-        self.minArray = []
-
-    def push(self, x: int) -> None:
-        self.stack.append(x)
-        if not self.minArray or x<=self.minArray[-1]:
-            self.minArray.append(x)
-    
-    def pop(self) -> None:
-        if not self.stack:
-            return
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
         
-        pop = self.stack.pop()
+        if not root:
+            return True
         
-        if pop == self.minArray[-1]:
-            self.minArray.pop()
+        nodelist = [(root, float('-inf'),float('inf'))]
         
-        return pop          
-
-    def top(self) -> int:
-        return self.stack[-1]
-
-    def getMin(self) -> int:
-        return self.minArray[-1]
+        while nodelist:
+            node, low, high = nodelist.pop(0)
+            if node.left:
+                if low >= node.left.val or node.val <= node.left.val:
+                    return False
+                nodelist.append((node.left, low, node.val))
+            if node.right:
+                if high <= node.right.val or node.val >= node.right.val:
+                    return False
+                nodelist.append((node.right, node.val, high))
+        return True
 ```
 
 ### Results
-**Time complexity**: *O*(1) for every operations.
+**Time complexity**: *O*(n) for every nodes.
 
-**Space complexity**: *O*(n) for storing *stack* (and *minArray* in the worst case).
+**Space complexity**: *O*(n) for storing *nodelist*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200320%20%23155%20Min%20Stack/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200323%20%2398%20Validate%20Binary%20Search%20Tree/1st%20trial.PNG)
