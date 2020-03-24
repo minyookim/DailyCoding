@@ -1,75 +1,56 @@
-# 200323 #98 Validate Binary Search Tree
-Link: https://leetcode.com/problems/validate-binary-search-tree/
+# 200324 #46 Permutations
+Link: https://leetcode.com/problems/permutations/
 
 ## Description
-Given a binary tree, determine if it is a valid binary search tree (BST).
+Given a collection of **distinct** integers, return all possible permutations.
 
-Assume a BST is defined as follows:
+**Example:**
 
-The left subtree of a node contains only nodes with keys less than the node's key.
-The right subtree of a node contains only nodes with keys greater than the node's key.
-Both the left and right subtrees must also be binary search trees.
- 
-
-**Example 1:**
-
-        2
-       / \
-      1   3
-
-    Input: [2,1,3]
-    Output: true
-
-**Example 2:**
-
-        5
-       / \
-      1   4
-         / \
-        3   6
-
-    Input: [5,1,4,null,null,3,6]
-    Output: false
-    Explanation: The root node's value is 5 but its right child's value is 4.
+    Input: [1,2,3]
+    Output:
+    [
+      [1,2,3],
+      [1,3,2],
+      [2,1,3],
+      [2,3,1],
+      [3,1,2],
+      [3,2,1]
+    ]
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Binary search tree should obey these two rules:
+To implement permutation in python is easy - just use Permutation function in itertools!
 
-    The left subtree of a node contains only nodes with keys less than the node's key.
-    The right subtree of a node contains only nodes with keys greater than the node's key.
-
-Importantly, this rule means not only the left child node is less than the parent node, but also means all the nodes in the left subtreee is less than the parent node. Therefore, checking not only the direct parent, but also the grander parents, is mandatory.
-
-To solve this question, the algorithm should check every nodes in the binary search tree, which can be implemented by either recursively or iteratively. Here I used iteration to check every node.
+However, for the sake of learning and practicing algorithms, I implemented Knuth shuffle algorithm, which I had practiced in undergrad. Here is the link I referred to while I was practicing (https://programmers.co.kr/learn/courses/4008/lessons/12836#note). Note that the description is written in Korean. You can easily find other similar implementations by google search Knuth permutation algorithm (e.g. https://stackoverflow.com/questions/25779087/how-to-generate-random-permutations-fast).
 
 ### Code
 ```python
 class Solution:
-    def isValidBST(self, root: TreeNode) -> bool:
+    def permute(self, nums: List[int]) -> List[List[int]]:
         
-        if not root:
-            return True
+        ans = [nums[:]]
+        c = [0] * len(nums)
+        i = 0
+        while i < len(nums):
+            if c[i] < i:
+                if i % 2 == 0:
+                    nums[0], nums[i] = nums[i], nums[0]
+                else:
+                    nums[c[i]], nums[i] = nums[i], nums[c[i]]
+                ans.append(nums[:])
+                c[i] += 1
+                i = 0
+            else:
+                c[i] = 0
+                i += 1
         
-        nodelist = [(root, float('-inf'),float('inf'))]
-        
-        while nodelist:
-            node, low, high = nodelist.pop(0)
-            if node.left:
-                if low >= node.left.val or node.val <= node.left.val:
-                    return False
-                nodelist.append((node.left, low, node.val))
-            if node.right:
-                if high <= node.right.val or node.val >= node.right.val:
-                    return False
-                nodelist.append((node.right, node.val, high))
-        return True
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for every nodes.
+**Time complexity**: *O*(n!) for making all the permutations.
 
-**Space complexity**: *O*(n) for storing *nodelist*.
+**Space complexity**: *O*(n!) for storing *ans*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200323%20%2398%20Validate%20Binary%20Search%20Tree/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200324%20%2346%20Permutations/1st%20trial.PNG)
