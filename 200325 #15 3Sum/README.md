@@ -1,56 +1,77 @@
-# 200324 #46 Permutations
-Link: https://leetcode.com/problems/permutations/
+# 200325 #15 3Sum
+Link: https://leetcode.com/problems/3sum/
 
 ## Description
-Given a collection of **distinct** integers, return all possible permutations.
+Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+
+**Note:**
+
+The solution set must not contain duplicate triplets.
 
 **Example:**
 
-    Input: [1,2,3]
-    Output:
+    Given array nums = [-1, 0, 1, 2, -1, -4],
+
+    A solution set is:
     [
-      [1,2,3],
-      [1,3,2],
-      [2,1,3],
-      [2,3,1],
-      [3,1,2],
-      [3,2,1]
+      [-1, 0, 1],
+      [-1, -1, 2]
     ]
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-To implement permutation in python is easy - just use Permutation function in itertools!
+Here I used two pointers to look through every pair of elements in the list and dictionary to keep every element and its frequency.
 
-However, for the sake of learning and practicing algorithms, I implemented Knuth shuffle algorithm, which I had practiced in undergrad. Here is the link I referred to while I was practicing (https://programmers.co.kr/learn/courses/4008/lessons/12836#note). Note that the description is written in Korean. You can easily find other similar implementations by google search Knuth permutation algorithm (e.g. https://stackoverflow.com/questions/25779087/how-to-generate-random-permutations-fast).
+Then, the algorithm finds whether the negative of summation of the two values that are designated by two pointers are in the dictionary. If so, add to the list. Please note that I used several if-conditions to process exceptions.
+
+Lastly, this algorithm results in duplicated solutions, so removing the duplicates is necessary. I implemented this with sorting algorithm. 
 
 ### Code
 ```python
 class Solution:
-    def permute(self, nums: List[int]) -> List[List[int]]:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        from collections import Counter
+        import itertools
         
-        ans = [nums[:]]
-        c = [0] * len(nums)
-        i = 0
-        while i < len(nums):
-            if c[i] < i:
-                if i % 2 == 0:
-                    nums[0], nums[i] = nums[i], nums[0]
-                else:
-                    nums[c[i]], nums[i] = nums[i], nums[c[i]]
-                ans.append(nums[:])
-                c[i] += 1
-                i = 0
-            else:
-                c[i] = 0
-                i += 1
+        anslst, numlst = [], Counter(nums)
+        
+        #get solutions using dictionary
+        for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                if j == i+1 or nums[j-1] != nums[j]:
+                    k = -(nums[i] + nums[j]) 
+                    if numlst[k]:
+                        if (nums[i] != k) and (nums[j] != k):
+                            anslst.append([nums[i], nums[j], k])
+                        else:
+                            if nums[i] == 0 and numlst[k] >= 3:
+                                anslst.append([nums[i], nums[j], k])
+                            elif (nums[i] != 0) and nums[i] == k and numlst[k]>=2:
+                                anslst.append([nums[i], nums[j], k])
+                            elif (nums[j] != 0) and nums[j] == k and numlst[k]>=2:
+                                anslst.append([nums[i], nums[j], k])
+        
+        #remove duplicates
+        anslst = [anslst[i] for i in range(len(anslst)) if i == 0 or anslst[i] != anslst[i-1]]
+        
+        for i in range(len(anslst)): 
+            anslst[i].sort()
+        anslst.sort()
+        
+        ans = [anslst[i] for i in range(len(anslst)) if i == 0 or anslst[i] != anslst[i-1]]
         
         return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n!) for making all the permutations.
+**Time complexity**: *O*(n<sup>2</sup>) for checking every two pairs in the list.
 
-**Space complexity**: *O*(n!) for storing *ans*.
+**Space complexity**: *O*(n<sup>2</sup>) for storing *anslst*.
 
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200324%20%2346%20Permutations/1st%20trial.PNG)
+
+### Discussions
+As both the time and space complexity indicate, this algorithm is not efficient to find three elements whose sum equals zero.
+
+It will be better if I look deep into the other algorithms in the Discuss section.
