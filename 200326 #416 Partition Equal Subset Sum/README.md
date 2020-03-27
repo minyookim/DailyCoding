@@ -1,77 +1,63 @@
-# 200325 #15 3Sum
-Link: https://leetcode.com/problems/3sum/
+# 200326 #416 Partition Equal Subset Sum
+Link: https://leetcode.com/problems/partition-equal-subset-sum/
 
 ## Description
-Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+
+Given a non-empty array containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.
 
 **Note:**
 
-The solution set must not contain duplicate triplets.
+Each of the array element will not exceed 100. The array size will not exceed 200.
 
-**Example:**
+**Example 1:**
 
-    Given array nums = [-1, 0, 1, 2, -1, -4],
+Input: [1, 5, 11, 5]
 
-    A solution set is:
-    [
-      [-1, 0, 1],
-      [-1, -1, 2]
-    ]
+Output: true
+
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+
+**Example 2:**
+
+Input: [1, 2, 3, 5]
+
+Output: false
+
+Explanation: The array cannot be partitioned into equal sum subsets.
+
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Here I used two pointers to look through every pair of elements in the list and dictionary to keep every element and its frequency.
+This problem asks whether it is possible to find list whose sum equals to 1/2 of sum of the given list. 
 
-Then, the algorithm finds whether the negative of summation of the two values that are designated by two pointers are in the dictionary. If so, add to the list. Please note that I used several if-conditions to process exceptions.
+    For element a in the given list, if we can make x through summing other elements, we can then make x-a.
+    For element b in the given list, if we can make x through summing elements other than a and b, we can then make x-b, and x-a-b.
+    ...
 
-Lastly, this algorithm results in duplicated solutions, so removing the duplicates is necessary. I implemented this with sorting algorithm. 
+As so, we can iterate this for every elements in the given list and check the possibiility of making the target value (half of the sum of the given list).
 
 ### Code
 ```python
 class Solution:
-    def threeSum(self, nums: List[int]) -> List[List[int]]:
-        from collections import Counter
-        import itertools
+    def canPartition(self, nums: List[int]) -> bool:
         
-        anslst, numlst = [], Counter(nums)
+        if (sum(nums) % 2):
+            return False
         
-        #get solutions using dictionary
-        for i in range(len(nums)):
-            for j in range(i+1,len(nums)):
-                if j == i+1 or nums[j-1] != nums[j]:
-                    k = -(nums[i] + nums[j]) 
-                    if numlst[k]:
-                        if (nums[i] != k) and (nums[j] != k):
-                            anslst.append([nums[i], nums[j], k])
-                        else:
-                            if nums[i] == 0 and numlst[k] >= 3:
-                                anslst.append([nums[i], nums[j], k])
-                            elif (nums[i] != 0) and nums[i] == k and numlst[k]>=2:
-                                anslst.append([nums[i], nums[j], k])
-                            elif (nums[j] != 0) and nums[j] == k and numlst[k]>=2:
-                                anslst.append([nums[i], nums[j], k])
+        target = sum(nums)//2        
+        anslst = [True] + [False]*target
         
-        #remove duplicates
-        anslst = [anslst[i] for i in range(len(anslst)) if i == 0 or anslst[i] != anslst[i-1]]
+        for i in nums:
+            for j in range(target, i-1, -1):
+                anslst[j] = anslst[j] or anslst[j-i]
         
-        for i in range(len(anslst)): 
-            anslst[i].sort()
-        anslst.sort()
-        
-        ans = [anslst[i] for i in range(len(anslst)) if i == 0 or anslst[i] != anslst[i-1]]
-        
-        return ans
+        return anslst[-1]
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) for checking every two pairs in the list.
+**Time complexity**: *O*(n<sup>2</sup>) for checking every elements in the nums list for the numbers of nums list.
 
-**Space complexity**: *O*(n<sup>2</sup>) for storing *anslst*.
+**Space complexity**: *O*(n) for storing *anslst*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200324%20%2346%20Permutations/1st%20trial.PNG)
-
-### Discussions
-As both the time and space complexity indicate, this algorithm is not efficient to find three elements whose sum equals zero.
-
-It will be better if I look deep into the other algorithms in the Discuss section.
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200326%20%23416%20Partition%20Equal%20Subset%20Sum/1st%20trial.PNG)
