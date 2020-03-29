@@ -1,4 +1,4 @@
-# 200316 #647 Palindromic Substring
+# 200316 #647 Palindromic Substrings
 Link: https://leetcode.com/problems/palindromic-substrings/
 
 ## Description
