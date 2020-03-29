@@ -58,7 +58,7 @@ class Solution:
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>log m</sup>), where n and m are the number of row and column, respectively. log m for binary search algorithm and n for iterating in every row.
+**Time complexity**: *O*(nlog m), where n and m are the number of row and column, respectively. log m for binary search algorithm and n for iterating in every row.
 
 **Space complexity**: *O*(1) for storing *l*, *r*, *m*, *numrow*, and *numcol* .
 
