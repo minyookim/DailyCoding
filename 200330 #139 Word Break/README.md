@@ -1,5 +1,5 @@
 # 200330 #139 Word Break
-Link: https://leetcode.com/problems/intersection-of-two-linked-lists/
+Link: https://leetcode.com/problems/word-break/
 
 ## Description
 Given a **non-empty** string s and a dictionary *wordDict* containing a list of **non-empty** words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
