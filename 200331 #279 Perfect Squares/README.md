@@ -23,50 +23,49 @@ The first approach that came to my mind was dynamic programming, but I speculate
 
 **Lagrange's four-square theorem**
 
+    Every natural number can be represented as the sum of four integer squares.
+    https://en.wikipedia.org/wiki/Lagrange%27s_four-square_theorem
 
 
 **Legendre's three-square theorem**
 
-    A natural number can be represented as the sum of three squares of integers {\displaystyle n=x^{2}+y^{2}+z^{2}}n=x^{2}+y^{2}+z^{2}
-    if and only if n is not of the form {\displaystyle n=4^{a}(8b+7)}n = 4^a(8b + 7) for nonnegative integers a and b.
+    A natural number can be represented as the sum of three squares of integers ***n = x<sup>2</sup>+y<sup>2</sup>+z<sup>2</sup>}***
+    if and only if n is not of the form ***n = 4<sup>a</sup>(8b+7)*** for nonnegative integers a and b.
     https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem
 
-    1. Find the index of every words in *wordDict*. 
-    2. Sort them in an increasing order.
-    3. If the substring from the start point to the i th point can be made by words in wordDic, then the substring from the start point to the i+ len(***k***) can be made using the word ***k*** that starts from i th point.
+**Two-square theorem**
+
+    An integer greater than one can be written as a sum of two squares if and only if its prime decomposition contains no prime congruent to ***3 modulo 4*** raised to an odd power.
+    https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem
+
+Here, I utilized these theorems to solve this question efficiently.
 
 ### Code
 ```python
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    def numSquares(self, n: int) -> int:
         
-        idxlst = []
+        import math
+        sqrt = math.sqrt(n)
         
-        for i in wordDict:
-            idx, j = [], 0
-            while j < len(s):
-                tmp = s.find(i,j,len(s))
-                if tmp == -1:
-                    j += len(s)
-                else:
-                    idx.append(tmp)
-                    j = tmp+1
-            for j in idx:
-                idxlst.append((j,j+len(i)))
-        idxlst.sort()
+        if sqrt.is_integer():
+            return 1
         
-        anslst = [True] + [False]*(len(s))
+        for i in range(1,int(sqrt)+1):
+            if math.sqrt(n - i*i).is_integer():
+                return 2
         
-        for (i,j) in idxlst:
-            if anslst[i] == True:
-                anslst[j] = True
-        
-        return anslst[-1]
+        while (n/4).is_integer():
+            n= n/4
+        if n%8 == 7:
+            return 4
+        else:
+            return 3
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) for getting index of the every words in wordDic in the worst case.
+**Time complexity**: *O*(log n) for the loop that returns 2.
 
-**Space complexity**: *O*(n<sup>2</sup>) for storing *idxlst* in the worst case.
+**Space complexity**: *O*(1) for storing *sqrt and n*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200330%20%23139%20Word%20Break/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200331%20%23279%20Perfect%20Squares/1st%20trial.PNG)
