@@ -1,37 +1,35 @@
-# 200330 #139 Word Break
-Link: https://leetcode.com/problems/word-break/
+# 200331 #279 Perfect Squares
+Link: https://leetcode.com/problems/perfect-squares/
 
 ## Description
-Given a **non-empty** string s and a dictionary *wordDict* containing a list of **non-empty** words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
-
-**Note:**
-
-- The same word in the dictionary may be reused multiple times in the segmentation.
-- You may assume the dictionary does not contain duplicate words.
-
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
 
 **Example 1:**
 
-    Input: s = "leetcode", wordDict = ["leet", "code"]
-    Output: true
-    Explanation: Return true because "leetcode" can be segmented as "leet code".
+    Input: n = 12
+    Output: 3 
+    Explanation: 12 = 4 + 4 + 4.
 
 **Example 2:**
 
-    Input: s = "applepenapple", wordDict = ["apple", "pen"]
-    Output: true
-    Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
-                 Note that you are allowed to reuse a dictionary word.
-
-**Example 3:**
-
-    Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
-    Output: false
+    Input: n = 13
+    Output: 2
+    Explanation: 13 = 4 + 9.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-The given problem has optimal substructure property, so it can be solved in dynamic programming (see my solution for the problem #416) with these three steps.
+The first approach that came to my mind was dynamic programming, but I speculated that there might be some other mathematical regularities. After finding the least number of perfect square numbers, from 1 to 35, I observed that every integers can be expressed with at least 4 sum of perfect square numbers. I googled the internet and I found the regarding theorems as follows:
+
+**Lagrange's four-square theorem**
+
+
+
+**Legendre's three-square theorem**
+
+    A natural number can be represented as the sum of three squares of integers {\displaystyle n=x^{2}+y^{2}+z^{2}}n=x^{2}+y^{2}+z^{2}
+    if and only if n is not of the form {\displaystyle n=4^{a}(8b+7)}n = 4^a(8b + 7) for nonnegative integers a and b.
+    https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem
 
     1. Find the index of every words in *wordDict*. 
     2. Sort them in an increasing order.
