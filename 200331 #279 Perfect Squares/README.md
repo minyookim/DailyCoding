@@ -24,19 +24,22 @@ The first approach that came to my mind was dynamic programming, but I speculate
 **Lagrange's four-square theorem**
 
     Every natural number can be represented as the sum of four integer squares.
-    https://en.wikipedia.org/wiki/Lagrange%27s_four-square_theorem
+    
+    Ref: https://en.wikipedia.org/wiki/Lagrange%27s_four-square_theorem
 
 
 **Legendre's three-square theorem**
 
     A natural number can be represented as the sum of three squares of integers ***n = x<sup>2</sup>+y<sup>2</sup>+z<sup>2</sup>}***
     if and only if n is not of the form ***n = 4<sup>a</sup>(8b+7)*** for nonnegative integers a and b.
-    https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem
+    
+    Ref: https://en.wikipedia.org/wiki/Legendre%27s_three-square_theorem
 
 **Two-square theorem**
 
     An integer greater than one can be written as a sum of two squares if and only if its prime decomposition contains no prime congruent to ***3 modulo 4*** raised to an odd power.
-    https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem
+    
+    Ref: https://en.wikipedia.org/wiki/Sum_of_two_squares_theorem
 
 Here, I utilized these theorems to solve this question efficiently.
 
