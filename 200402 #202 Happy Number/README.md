@@ -1,74 +1,47 @@
-# 200330 #139 Word Break
+# 200402 #202 Happy Number
 Link: https://leetcode.com/problems/word-break/
 
 ## Description
-Given a **non-empty** string s and a dictionary *wordDict* containing a list of **non-empty** words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+Write an algorithm to determine if a number is "happy".
 
-**Note:**
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
 
-- The same word in the dictionary may be reused multiple times in the segmentation.
-- You may assume the dictionary does not contain duplicate words.
+**Example: **
 
-
-**Example 1:**
-
-    Input: s = "leetcode", wordDict = ["leet", "code"]
+    Input: 19
     Output: true
-    Explanation: Return true because "leetcode" can be segmented as "leet code".
 
-**Example 2:**
-
-    Input: s = "applepenapple", wordDict = ["apple", "pen"]
-    Output: true
-    Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
-                 Note that you are allowed to reuse a dictionary word.
-
-**Example 3:**
-
-    Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
-    Output: false
+    Explanation: 
+    12 + 92 = 82
+    82 + 22 = 68
+    62 + 82 = 100
+    12 + 02 + 02 = 1
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-The given problem has optimal substructure property, so it can be solved in dynamic programming (see my solution for the problem #416) with these three steps.
-
-    1. Find the index of every words in *wordDict*. 
-    2. Sort them in an increasing order.
-    3. If the substring from the start point to the i th point can be made by words in wordDic, then the substring from the start point to the i+ len(***k***) can be made using the word ***k*** that starts from i th point.
+After several iterations, the given integer converges into 1 or loops endlessly in a cycle. I used memoization to track visited numbers. If the number equals the number that was previously visited, the loop stops. If the result is 1, return True or else, return False.
 
 ### Code
 ```python
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        ref = {'0':0,'1':1,'2':4,'3':9,'4':16,'5':25,'6':36,'7':49,'8':64,'9':81}
+        visited = []
         
-        idxlst = []
+        while n not in visited:
+            visited.append(n)
+            n = sum([ref[i] for i in str(n)])
         
-        for i in wordDict:
-            idx, j = [], 0
-            while j < len(s):
-                tmp = s.find(i,j,len(s))
-                if tmp == -1:
-                    j += len(s)
-                else:
-                    idx.append(tmp)
-                    j = tmp+1
-            for j in idx:
-                idxlst.append((j,j+len(i)))
-        idxlst.sort()
-        
-        anslst = [True] + [False]*(len(s))
-        
-        for (i,j) in idxlst:
-            if anslst[i] == True:
-                anslst[j] = True
-        
-        return anslst[-1]
+        if n == 1:
+            return True
+        else:
+            return False
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) for getting index of the every words in wordDic in the worst case.
+**Time complexity**: It is hard to define time complexity in this case depends on n...
 
-**Space complexity**: *O*(n<sup>2</sup>) for storing *idxlst* in the worst case.
+**Space complexity**: *O*(n) if we define n as the numbers of visited integers.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200330%20%23139%20Word%20Break/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200402%20%23202%20Happy%20Number/1st%20trial.PNG)
