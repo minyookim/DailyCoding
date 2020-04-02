@@ -1,5 +1,5 @@
 # 200402 #202 Happy Number
-Link: https://leetcode.com/problems/word-break/
+Link: https://leetcode.com/problems/happy-number/
 
 ## Description
 Write an algorithm to determine if a number is "happy".
