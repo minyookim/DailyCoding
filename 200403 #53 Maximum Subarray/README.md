@@ -37,6 +37,6 @@ class Solution:
 ### Results
 **Time complexity**: *O*(n) for iterating every elements to get *minsum*, *cumsum*, and *ans* values.
 
-**Space complexity**: *O*(n) for storing *minsum, cumsum, ans*.
+**Space complexity**: *O*(1) for storing *minsum, cumsum, ans*.
 
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200403%20%2353%20Maximum%20Subarray/1st%20trial.PNG)
