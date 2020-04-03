@@ -1,47 +1,42 @@
-# 200402 #202 Happy Number
-Link: https://leetcode.com/problems/happy-number/
+# 200403 #53 Maximum Subarray
+Link: https://leetcode.com/problems/maximum-subarray/
 
 ## Description
-Write an algorithm to determine if a number is "happy".
+Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
 
-A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+**Example:**
 
-**Example: **
+    Input: [-2,1,-3,4,-1,2,1,-5,4],
+    Output: 6
+    Explanation: [4,-1,2,1] has the largest sum = 6.
 
-    Input: 19
-    Output: true
+**Follow up:**
 
-    Explanation: 
-    12 + 92 = 82
-    82 + 22 = 68
-    62 + 82 = 100
-    12 + 02 + 02 = 1
+If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-After several iterations, the given integer converges into 1 or loops endlessly in a cycle. I used memoization to track visited numbers. If the number equals the number that was previously visited, the loop stops. If the result is 1, return True or else, return False.
+Sum of the maximum subarray can be viewed as maximum values among the subtraction of two cumulative sums (sums from the 1st index, cumsum). While iterating every element, update the minimum value of cumsums and subtract the minimum cumsum with the current cumsum. Lastly, update the sum of the maximum subarray by comparing the previous sum of the maximum subarray with current one. This will yield the answer.
 
 ### Code
 ```python
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        ref = {'0':0,'1':1,'2':4,'3':9,'4':16,'5':25,'6':36,'7':49,'8':64,'9':81}
-        visited = []
+    def maxSubArray(self, nums: List[int]) -> int:
+    
+        minsum, cumsum, ans = 0, 0, float('-inf')
         
-        while n not in visited:
-            visited.append(n)
-            n = sum([ref[i] for i in str(n)])
+        for i in nums:
+            minsum = min(minsum, cumsum)
+            cumsum += i
+            ans = max(ans, cumsum - minsum)
         
-        if n == 1:
-            return True
-        else:
-            return False
+        return ans
 ```
 
 ### Results
-**Time complexity**: It is hard to define time complexity in this case depends on n...
+**Time complexity**: *O*(n) for iterating every elements to get *minsum*, *cumsum*, and *ans* values.
 
-**Space complexity**: *O*(n) if we define n as the numbers of visited integers.
+**Space complexity**: *O*(n) for storing *minsum, cumsum, ans*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200402%20%23202%20Happy%20Number/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200403%20%2353%20Maximum%20Subarray/1st%20trial.PNG)
