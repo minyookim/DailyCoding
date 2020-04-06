@@ -1,47 +1,53 @@
-# 200402 #202 Happy Number
-Link: https://leetcode.com/problems/happy-number/
+# 200406 #49 Group Anagrams
+Link: https://leetcode.com/problems/group-anagrams/
 
 ## Description
-Write an algorithm to determine if a number is "happy".
+Given an array of strings, group anagrams together.
 
-A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+**Example:**
 
-**Example: **
+    Input: ["eat", "tea", "tan", "ate", "nat", "bat"],
+    Output:
+    [
+      ["ate","eat","tea"],
+      ["nat","tan"],
+      ["bat"]
+    ]
 
-    Input: 19
-    Output: true
+**Note:**
 
-    Explanation: 
-    12 + 92 = 82
-    82 + 22 = 68
-    62 + 82 = 100
-    12 + 02 + 02 = 1
+All inputs will be in lowercase.
+The order of your output does not matter.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-After several iterations, the given integer converges into 1 or loops endlessly in a cycle. I used memoization to track visited numbers. If the number equals the number that was previously visited, the loop stops. If the result is 1, return True or else, return False.
+After making the Counter of each string, check whether it was previously generated. 
+If so, append the string into the anagram array, and if not, append the string by making new array.
 
 ### Code
 ```python
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        ref = {'0':0,'1':1,'2':4,'3':9,'4':16,'5':25,'6':36,'7':49,'8':64,'9':81}
-        visited = []
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        import collections
         
-        while n not in visited:
-            visited.append(n)
-            n = sum([ref[i] for i in str(n)])
+        ans = []
+        strcnt = []
+        for i in strs:
+            tmp = collections.Counter(i)
+            if tmp not in strcnt:
+                strcnt.append(collections.Counter(i))
+                ans.append([i])
+            else:
+                k= strcnt.index(tmp)
+                ans[k].append(i)
         
-        if n == 1:
-            return True
-        else:
-            return False
+        return ans
 ```
 
 ### Results
-**Time complexity**: It is hard to define time complexity in this case depends on n...
+**Time complexity**: *O*(nk) for searching through strcnt array.
 
-**Space complexity**: *O*(n) if we define n as the numbers of visited integers.
+**Space complexity**: *O*(n) for storing *strcnt and ans* array.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200402%20%23202%20Happy%20Number/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200406%20%2349%20Group%20Anagrams/1st%20trial.PNG)
