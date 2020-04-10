@@ -96,4 +96,4 @@ class Solution:
 
 **Space complexity**: *O*(1) for storing *cntT, pointerT, cntS, pointerS*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200409%20%23844%20Backspace%20String%20Compare/1st%20trial.PNGG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200409%20%23844%20Backspace%20String%20Compare/1st%20trial.PNG)
