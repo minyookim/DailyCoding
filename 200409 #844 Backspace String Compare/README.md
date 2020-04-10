@@ -1,62 +1,99 @@
-# 200408 #876 Middle of the Linked List
-Link: https://leetcode.com/problems/middle-of-the-linked-list/
+# 200409 #844 Backspace String Compare
+Link: https://leetcode.com/problems/backspace-string-compare/
 
 ## Description
-Given a non-empty, singly linked list with head node head, return a middle node of linked list.
-
-If there are two middle nodes, return the second middle node.
+Given two strings S and T, return if they are equal when both are typed into empty text editors. # means a backspace character.
 
 **Example 1:**
 
-    Input: [1,2,3,4,5]
-    Output: Node 3 from this list (Serialization: [3,4,5])
-    The returned node has value 3.  (The judge's serialization of this node is [3,4,5]).
-    Note that we returned a ListNode object ans, such that:
-    ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, and ans.next.next.next = NULL.
+    Input: S = "ab#c", T = "ad#c"
+    Output: true
+    Explanation: Both S and T become "ac".
 
 **Example 2:**
 
-    Input: [1,2,3,4,5,6]
-    Output: Node 4 from this list (Serialization: [4,5,6])
-    Since the list has two middle nodes with values 3 and 4, we return the second one.
- 
+    Input: S = "ab##", T = "c#d#"
+    Output: true
+    Explanation: Both S and T become "".
+
+**Example 3:**
+
+    Input: S = "a##c", T = "#a#c"
+    Output: true
+    Explanation: Both S and T become "c".
+
+**Example 4:**
+
+    Input: S = "a#c", T = "b"
+    Output: false
+    Explanation: S becomes "c" while T becomes "b".
 
 **Note:**
 
-    The number of nodes in the given list will be between 1 and 100.
+    1 <= S.length <= 200
+    1 <= T.length <= 200
+    S and T only contain lowercase letters and '#' characters.
+
+**Follow up:**
+
+    Can you solve it in O(N) time and O(1) space?
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-While going through the end of the linked list, add counter for every iterations.
-Then, move the pointers by the counter divided by two. Return the pointer. 
+While iterating through two strings in reverse, if # letter comes out, increment the counter for # letter. If the counter for # letter is not 0 and the current letter is not #, skip the current letter until the counter for # letter is 0 and the current letter is not #. If both strings reach to the conditions where the current letter is not # and the counter for # letter is 0, check whether the two letters are same.
+
 
 ### Code
 ```python
 class Solution:
-    def middleNode(self, head: ListNode) -> ListNode:
+    def backspaceCompare(self, S: str, T: str) -> bool:
         
-        cnt = 0
-        pointer = head
+        pointerS, pointerT, cntS, cntT = len(S)-1, len(T)-1, 0, 0
         
-        while pointer.next:
-            pointer = pointer.next
-            cnt += 1
-        
-        pointer = head
-        for i in range(cnt//2):
-            pointer = pointer.next
-        
-        if cnt%2:
-            pointer = pointer.next
-        
-        return pointer
+        while pointerS >= 0 or pointerT >= 0:
+            if pointerS >= 0:
+                i = S[pointerS]
+            else:
+                i = ''
+            if pointerT >= 0:
+                j = T[pointerT]
+            else:
+                j = ''
+            
+            if i == "#":
+                cntS += 1
+                pointerS -= 1
+                continue
+                
+            if j == "#":
+                cntT += 1
+                pointerT -= 1
+                continue
+                
+            if cntS:
+                cntS -= 1
+                pointerS -= 1
+                continue
+                
+            if cntT:
+                cntT -= 1
+                pointerT -= 1
+                continue
+                
+            if i != j:
+                return False
+            
+            pointerS -= 1
+            pointerT -= 1
+            
+        return pointerS < 0 and pointerT < 0
 ```
 
 ### Results
-**Time complexity**: *O*(n) for two single passes.
+**Time complexity**: *O*(n) for moving through every letters in two strings.
 
-**Space complexity**: *O*(1) for storing *cnt* and *pointer*.
+**Space complexity**: *O*(1) for storing *cntT, pointerT, cntS, pointerS*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200408%20%23876%20Middle%20of%20the%20Linked%20List/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200409%20%23844%20Backspace%20String%20Compare/1st%20trial.PNGG)
