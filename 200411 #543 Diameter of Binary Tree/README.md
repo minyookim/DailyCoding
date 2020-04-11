@@ -1,62 +1,53 @@
-# 200408 #876 Middle of the Linked List
-Link: https://leetcode.com/problems/middle-of-the-linked-list/
+# 200411 #543 Diameter of Binary Tree
+Link: https://leetcode.com/problems/diameter-of-binary-tree/
 
 ## Description
-Given a non-empty, singly linked list with head node head, return a middle node of linked list.
+Given a binary tree, you need to compute the length of the diameter of the tree. The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
 
-If there are two middle nodes, return the second middle node.
+**Example:**
 
-**Example 1:**
+    Given a binary tree
+              1
+             / \
+            2   3
+           / \     
+          4   5    
+    Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
 
-    Input: [1,2,3,4,5]
-    Output: Node 3 from this list (Serialization: [3,4,5])
-    The returned node has value 3.  (The judge's serialization of this node is [3,4,5]).
-    Note that we returned a ListNode object ans, such that:
-    ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, and ans.next.next.next = NULL.
-
-**Example 2:**
-
-    Input: [1,2,3,4,5,6]
-    Output: Node 4 from this list (Serialization: [4,5,6])
-    Since the list has two middle nodes with values 3 and 4, we return the second one.
- 
-
-**Note:**
-
-    The number of nodes in the given list will be between 1 and 100.
+**Note:** The length of path between two nodes is represented by the number of edges between them.
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-While going through the end of the linked list, add counter for every iterations.
-Then, move the pointers by the counter divided by two. Return the pointer. 
+Here I utilized depth-first search algorithm using recursion. While searching through all the nodes in the tree, update the nonlocal variable *diameter* by calculating max(current diameter, diameter of the nodes that is calculated by adding diameter of the left node and that of the right node).
 
 ### Code
 ```python
 class Solution:
-    def middleNode(self, head: ListNode) -> ListNode:
+    def diameterOfBinaryTree(self, root: TreeNode) -> int:
         
-        cnt = 0
-        pointer = head
+        diameter = 0
         
-        while pointer.next:
-            pointer = pointer.next
-            cnt += 1
+        def calDiameter(node):
+            if not node:
+                return 0
+            
+            nonlocal diameter
+            diameterL = calDiameter(node.left)
+            diameterR = calDiameter(node.right)
+            diameter = max(diameter, diameterL+diameterR)
+            
+            return max(diameterL, diameterR) + 1
         
-        pointer = head
-        for i in range(cnt//2):
-            pointer = pointer.next
+        calDiameter(root)
         
-        if cnt%2:
-            pointer = pointer.next
-        
-        return pointer
+        return diameter
 ```
 
 ### Results
-**Time complexity**: *O*(n) for two single passes.
+**Time complexity**: *O*(n) for single pass of all the nodes.
 
-**Space complexity**: *O*(1) for storing *cnt* and *pointer*.
+**Space complexity**: *O*(1) for storing *diameter, diameterL, diameterR*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200408%20%23876%20Middle%20of%20the%20Linked%20List/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200411%20%23543%20Diameter%20of%20Binary%20Tree/1st%20trial.PNG)
