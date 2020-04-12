@@ -62,4 +62,4 @@ class Solution:
 
 **Space complexity**: *O*(1) for storing *tmp1, tmp2, and newStone".
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200408%20%23876%20Middle%20of%20the%20Linked%20List/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200412%20%231046%20Last%20Stone%20Weight/1st%20trial.PNG)
