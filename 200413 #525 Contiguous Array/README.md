@@ -1,65 +1,50 @@
-# 200412 #1046 Last Stone Weight
-Link: https://leetcode.com/problems/last-stone-weight/
+# 200413 #525 Contiguous Array
+Link: https://leetcode.com/problems/contiguous-array/
 
 ## Description
-We have a collection of stones, each stone has a positive integer weight.
-
-Each turn, we choose the two heaviest stones and smash them together.  Suppose the stones have weights x and y with x <= y.  The result of this smash is:
-
-If x == y, both stones are totally destroyed;
-If x != y, the stone of weight x is totally destroyed, and the stone of weight y has new weight y-x.
-At the end, there is at most 1 stone left.  Return the weight of this stone (or 0 if there are no stones left.)
+Given a binary array, find the maximum length of a contiguous subarray with equal number of 0 and 1.
 
 **Example 1:**
 
-    Input: [2,7,4,1,8,1]
-    Output: 1
-    
-    Explanation: 
-    We combine 7 and 8 to get 1 so the array converts to [2,4,1,1,1] then,
-    we combine 2 and 4 to get 2 so the array converts to [2,1,1,1] then,
-    we combine 2 and 1 to get 1 so the array converts to [1,1,1] then,
-    we combine 1 and 1 to get 0 so the array converts to [1] then that's the value of last stone.
- 
+    Input: [0,1]
+    Output: 2
+    Explanation: [0, 1] is the longest contiguous subarray with equal number of 0 and 1.
 
-**Note:**
+**Example 2:**
 
-    1 <= stones.length <= 30
-    1 <= stones[i] <= 1000
+    Input: [0,1,0]
+    Output: 2
+    Explanation: [0, 1] (or [1, 0]) is a longest contiguous subarray with equal number of 0 and 1.
 
+**Note:** The length of the given binary array will not exceed 50,000.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-First, sort the stone array. Then, pop two largest items and calculate the difference between the two. If the difference is a positive integer, insert the element into the sorted array. Repeat this until the length of the stones list becomes 0 or 1.
+While updating the "relative" numbers of zeroes compared to ones, store the relative number in the dictionary where the value is an index. Then, find whether the same number is in the dictionary. If so, it means that there was cumulative list (a list from index 0 to i) and if we substract the two lists (the current list and the list that was in the dictionary), we can get the length of the contiguous subarray with equal number of 0 and 1.
 
 ### Code
 ```python
 class Solution:
-    def lastStoneWeight(self, stones: List[int]) -> int:
-        import bisect 
+    def findMaxLength(self, nums: List[int]) -> int:
         
-        stones.sort()
-        print(stones)
+        ans, cumdict, zeroes = 0, {0:-1}, 0
         
-        while len(stones) > 1:
-            tmp1 = stones.pop()
-            tmp2 = stones.pop()
-            newStone = tmp1 - tmp2
-            
-            if newStone:
-                bisect.insort(stones, newStone) 
-            print(stones)
-        
-        if len(stones) == 1:
-            return stones[0]
-        else:
-            return 0
+        for i in range(len(nums)):
+            if nums[i]==0:
+                zeroes += 1
+            elif nums[i]==1:
+                zeroes -= 1
+            if zeroes in cumdict:
+                ans = max(ans,i-cumdict[zeroes])
+            if not zeroes in cumdict:
+                cumdict[zeroes] = i
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) such that each insertion process takes O(n) and the algorithm should repeat insertion process for n elements.
+**Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(1) for storing *tmp1, tmp2, and newStone".
+**Space complexity**: *O*(n) for storing the dictionary *cumdict*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200412%20%231046%20Last%20Stone%20Weight/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200413%20%23525%20Contiguous%20Array/1st%20trial.PNG)
