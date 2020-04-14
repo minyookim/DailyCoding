@@ -1,65 +1,69 @@
-# 200412 #1046 Last Stone Weight
-Link: https://leetcode.com/problems/last-stone-weight/
+# 200414 # Perform String Shifts
+Link: https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/529/week-2/3299/
 
 ## Description
-We have a collection of stones, each stone has a positive integer weight.
+You are given a string s containing lowercase English letters, and a matrix shift, where shift[i] = [direction, amount]:
 
-Each turn, we choose the two heaviest stones and smash them together.  Suppose the stones have weights x and y with x <= y.  The result of this smash is:
+    direction can be 0 (for left shift) or 1 (for right shift). 
+    amount is the amount by which string s is to be shifted.
+    A left shift by 1 means remove the first character of s and append it to the end.
+    Similarly, a right shift by 1 means remove the last character of s and add it to the beginning.
 
-If x == y, both stones are totally destroyed;
-If x != y, the stone of weight x is totally destroyed, and the stone of weight y has new weight y-x.
-At the end, there is at most 1 stone left.  Return the weight of this stone (or 0 if there are no stones left.)
+Return the final string after all operations.
 
 **Example 1:**
-
-    Input: [2,7,4,1,8,1]
-    Output: 1
-    
+    Input: s = "abc", shift = [[0,1],[1,2]]
+    Output: "cab"
     Explanation: 
-    We combine 7 and 8 to get 1 so the array converts to [2,4,1,1,1] then,
-    we combine 2 and 4 to get 2 so the array converts to [2,1,1,1] then,
-    we combine 2 and 1 to get 1 so the array converts to [1,1,1] then,
-    we combine 1 and 1 to get 0 so the array converts to [1] then that's the value of last stone.
- 
+    [0,1] means shift to left by 1. "abc" -> "bca"
+    [1,2] means shift to right by 2. "bca" -> "cab"
 
-**Note:**
+**Example 2:**
 
-    1 <= stones.length <= 30
-    1 <= stones[i] <= 1000
+    Input: s = "abcdefg", shift = [[1,1],[1,1],[0,2],[1,3]]
+    Output: "efgabcd"
+    Explanation:  
+    [1,1] means shift to right by 1. "abcdefg" -> "gabcdef"
+    [1,1] means s**hift to right by 1. "gabcdef" -> "fgabcde"
+    [0,2] means shift to left by 2. "fgabcde" -> "abcdefg"
+    [1,3] means shift to right by 3. "abcdefg" -> "efgabcd"
+
+
+**Constraints:**
+
+1 <= s.length <= 100
+s only contains lower case English letters.
+1 <= shift.length <= 100
+shift[i].length == 2
+0 <= shift[i][0] <= 1
+0 <= shift[i][1] <= 100
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-First, sort the stone array. Then, pop two largest items and calculate the difference between the two. If the difference is a positive integer, insert the element into the sorted array. Repeat this until the length of the stones list becomes 0 or 1.
+Like a conveyor belt, elements in shift list move the string left or right. Since moving left cancels moving right, it will be better to add all the elements in shift first, to calculate the total amount of shifts. Then, modulo operation of the total count will yield the amount of shift.
 
 ### Code
 ```python
 class Solution:
-    def lastStoneWeight(self, stones: List[int]) -> int:
-        import bisect 
+    def stringShift(self, s: str, shift: List[List[int]]) -> str:
         
-        stones.sort()
-        print(stones)
+        cnt = 0
+        for [a,b] in shift:
+            if a == 0:
+                cnt += b
+            if a == 1:
+                cnt -= b
         
-        while len(stones) > 1:
-            tmp1 = stones.pop()
-            tmp2 = stones.pop()
-            newStone = tmp1 - tmp2
-            
-            if newStone:
-                bisect.insort(stones, newStone) 
-            print(stones)
+        cnt %= len(s)
         
-        if len(stones) == 1:
-            return stones[0]
-        else:
-            return 0
+        return s[cnt:len(s)] + s[0:cnt]
 ```
 
 ### Results
-**Time complexity**: *O*(n<sup>2</sup>) such that each insertion process takes O(n) and the algorithm should repeat insertion process for n elements.
+**Time complexity**: *O*(n) for single pass of shift list.
 
-**Space complexity**: *O*(1) for storing *tmp1, tmp2, and newStone".
+**Space complexity**: *O*(1) for storing *cnt, a, b".
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200408%20%23876%20Middle%20of%20the%20Linked%20List/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200414%20%23%20Perform%20String%20Shifts/1st%20trial.PNG)
