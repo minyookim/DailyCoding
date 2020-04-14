@@ -65,6 +65,6 @@ class Solution:
 ### Results
 **Time complexity**: *O*(n) for single pass of shift list.
 
-**Space complexity**: *O*(1) for storing *cnt, a, b".
+**Space complexity**: *O*(1) for storing *cnt, a, b*.
 
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200414%20%23%20Perform%20String%20Shifts/1st%20trial.PNG)
