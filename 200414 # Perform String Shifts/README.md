@@ -12,6 +12,7 @@ You are given a string s containing lowercase English letters, and a matrix shif
 Return the final string after all operations.
 
 **Example 1:**
+
     Input: s = "abc", shift = [[0,1],[1,2]]
     Output: "cab"
     Explanation: 
