@@ -60,6 +60,9 @@ class Solution:
 ### Results
 **Time complexity**: *O*(n<sup>2</sup>) such that each insertion process takes O(n) and the algorithm should repeat insertion process for n elements.
 
-**Space complexity**: *O*(1) for storing *tmp1, tmp2, and newStone".
+**Space complexity**: *O*(1) for storing *tmp1, tmp2, and newStone*.
 
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200412%20%231046%20Last%20Stone%20Weight/1st%20trial.PNG)
+
+## Discussions
+It might be better to utilize with max-heap data structure.
