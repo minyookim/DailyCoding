@@ -1,5 +1,5 @@
 # 200407 # Counting Elements
-Link: https://leetcode.com/problems/group-anagrams/
+Link: https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/528/week-1/3289/
 
 ## Description
 Given an integer array arr, count element x such that x + 1 is also in arr.
@@ -40,8 +40,7 @@ If there're duplicates in arr, count them seperately.
 ## 1<sup>st</sup> trial
 
 ### Intuition
-After making the Counter of each string, check whether it was previously generated. 
-If so, append the string into the anagram array, and if not, append the string by making new array.
+First, sort the list. If the i+1-th element is same as i-th element, then increment the counter that indicates the number of same element. If the i+1-th element is (i-th element + 1), increment the *ans* value by amount of counter, since x + 1 is in the list. 
 
 ### Code
 ```python
@@ -64,8 +63,8 @@ class Solution:
 ```
 
 ### Results
-**Time complexity**: *O*(nk) for searching through strcnt array.
+**Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(n) for storing *strcnt and ans* array.
+**Space complexity**: *O*(1) for storing *ans* and *cnt*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200406%20%2349%20Group%20Anagrams/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200407%20%23%20Counting%20Elements/1st%20trial.PNG)
