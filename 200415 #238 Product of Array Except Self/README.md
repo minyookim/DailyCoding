@@ -20,7 +20,7 @@ Could you solve it with constant space complexity? (The output array does not co
 ## 1<sup>st</sup> trial
 
 ### Intuition
-The i-th element of output array will be the product of all the elements from 1~i-1-th and i+1~end-th elements. By keeping multiplying the l and r variables and update the i-th element of output array with the product of l and r will yield the answer.
+The i-th element of output array will be the product of all the elements from 1-i-1-th and i+1-end-th elements. By keeping multiplying the l and r variables and update the i-th element of output array with the product of l and r will yield the answer.
 
 ### Code
 ```python
