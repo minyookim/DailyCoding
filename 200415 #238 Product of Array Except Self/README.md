@@ -1,70 +1,46 @@
-# 200414 # Perform String Shifts
-Link: https://leetcode.com/explore/challenge/card/30-day-leetcoding-challenge/529/week-2/3299/
+# 200415 #238 Product of Array Except Self
+Link: https://leetcode.com/problems/product-of-array-except-self/
 
 ## Description
-You are given a string s containing lowercase English letters, and a matrix shift, where shift[i] = [direction, amount]:
+Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
 
-    direction can be 0 (for left shift) or 1 (for right shift). 
-    amount is the amount by which string s is to be shifted.
-    A left shift by 1 means remove the first character of s and append it to the end.
-    Similarly, a right shift by 1 means remove the last character of s and add it to the beginning.
+**Example:**
 
-Return the final string after all operations.
+Input:  [1,2,3,4]
+Output: [24,12,8,6]
 
-**Example 1:**
+**Constraint:** It's guaranteed that the product of the elements of any prefix or suffix of the array (including the whole array) fits in a 32 bit integer.
 
-    Input: s = "abc", shift = [[0,1],[1,2]]
-    Output: "cab"
-    Explanation: 
-    [0,1] means shift to left by 1. "abc" -> "bca"
-    [1,2] means shift to right by 2. "bca" -> "cab"
+**Note:** Please solve it without division and in O(n).
 
-**Example 2:**
-
-    Input: s = "abcdefg", shift = [[1,1],[1,1],[0,2],[1,3]]
-    Output: "efgabcd"
-    Explanation:  
-    [1,1] means shift to right by 1. "abcdefg" -> "gabcdef"
-    [1,1] means s**hift to right by 1. "gabcdef" -> "fgabcde"
-    [0,2] means shift to left by 2. "fgabcde" -> "abcdefg"
-    [1,3] means shift to right by 3. "abcdefg" -> "efgabcd"
-
-
-**Constraints:**
-
-1 <= s.length <= 100
-s only contains lower case English letters.
-1 <= shift.length <= 100
-shift[i].length == 2
-0 <= shift[i][0] <= 1
-0 <= shift[i][1] <= 100
+**Follow up:**
+Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Like a conveyor belt, elements in shift list move the string left or right. Since moving left cancels moving right, it will be better to add all the elements in shift first, to calculate the total amount of shifts. Then, modulo operation of the total count will yield the amount of shift.
+The i-th element of output array will be the product of all the elements from 1~i-1-th and i+1~end-th elements. By keeping multiplying the l and r variables and update the i-th element of output array with the product of l and r will yield the answer.
 
 ### Code
 ```python
 class Solution:
-    def stringShift(self, s: str, shift: List[List[int]]) -> str:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
         
-        cnt = 0
-        for [a,b] in shift:
-            if a == 0:
-                cnt += b
-            if a == 1:
-                cnt -= b
+        ans, l, r = [1]*len(nums), 1, 1
         
-        cnt %= len(s)
+        for i in range(len(nums)):
+            ans[i] *= l
+            l *= nums[i]
+            ans[-i-1] *= r
+            r *= nums[-i-1]
         
-        return s[cnt:len(s)] + s[0:cnt]
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for single pass of shift list.
+**Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(1) for storing *cnt, a, b*.
+**Space complexity**: *O*(1) for storing *l, r* (except for ans array).
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200414%20%23%20Perform%20String%20Shifts/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200415%20%23238%20Product%20of%20Array%20Except%20Self/1st%20trial.PNG)
