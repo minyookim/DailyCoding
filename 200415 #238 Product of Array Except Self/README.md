@@ -41,6 +41,6 @@ class Solution:
 ### Results
 **Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(1) for storing *l, r* (except for ans array).
+**Space complexity**: *O*(1) for storing *l* and *r* (except for ans array).
 
 ![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200415%20%23238%20Product%20of%20Array%20Except%20Self/1st%20trial.PNG)
