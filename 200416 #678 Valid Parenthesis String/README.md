@@ -1,46 +1,73 @@
-# 200415 #238 Product of Array Except Self
-Link: https://leetcode.com/problems/product-of-array-except-self/
+# 200416 #678 Valid Parenthesis String
+Link: https://leetcode.com/problems/valid-parenthesis-string/
 
 ## Description
-Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. We define the validity of a string by these rules:
 
-**Example:**
+    1. Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+    2. Any right parenthesis ')' must have a corresponding left parenthesis '('.
+    3. Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+    4. '*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
+    5. An empty string is also valid.
 
-Input:  [1,2,3,4]
-Output: [24,12,8,6]
+**Example 1:**
 
-**Constraint:** It's guaranteed that the product of the elements of any prefix or suffix of the array (including the whole array) fits in a 32 bit integer.
+    Input: "()"
+    Output: True
+    
+**Example 2:**
 
-**Note:** Please solve it without division and in O(n).
+    Input: "(*)"
+    Output: True
 
-**Follow up:**
-Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
+**Example 3:**
+
+    Input: "(*))"
+    Output: True
+
+**Note:** The string size will be in the range [1, 100].
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-The i-th element of output array will be the product of all the elements from 1~i-1-th and i+1~end-th elements. By keeping multiplying the l and r variables and update the i-th element of output array with the product of l and r will yield the answer.
+If you traverse the list of strings from left, the number of "(" parenthesis should be always larger or same than the number of ")" and asterisks. Conversely, if you traverse the list from the right side, the number of ")" should be always larger or same than the number of the others. By single-passing the list, use two pointers that traverse from the left and right, respectively, count the numbers of "(", ")", and the asterisks, and see if two conditions that I described above are satisfied.
 
 ### Code
 ```python
 class Solution:
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
+    def checkValidString(self, s: str) -> bool:
         
-        ans, l, r = [1]*len(nums), 1, 1
+        cnt1, cnt2, idx, buf1, buf2, lens = 0,0,0,0,0, len(s)
+        while idx < lens:
+            if s[idx] == "(":
+                cnt1 += 1
+            elif s[idx] == ")":
+                cnt1 -= 1
+            elif s[idx] == "*":
+                buf1 += 1
+                
+            
+            if s[-idx-1] == ")":
+                cnt2 += 1
+            elif s[-idx-1] == "(":
+                cnt2 -= 1
+            elif s[-idx-1] == "*":
+                buf2 += 1
+            
+            if cnt1+buf1< 0 or cnt2+buf2< 0:
+                return False
+            
+            idx += 1
         
-        for i in range(len(nums)):
-            ans[i] *= l
-            l *= nums[i]
-            ans[-i-1] *= r
-            r *= nums[-i-1]
-        
-        return ans
+        if cnt1 > buf1:
+            return False
+        return True
 ```
 
 ### Results
 **Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(1) for storing *l, r* (except for ans array).
+**Space complexity**: *O*(1) for storing *cnt1, cnt2, buf1, buf2, idx, and lens*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200415%20%23238%20Product%20of%20Array%20Except%20Self/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200416%20%23678%20Valid%20Parenthesis%20String/1st%20trial.PNG)
