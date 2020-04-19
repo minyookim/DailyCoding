@@ -1,73 +1,53 @@
-# 200416 #678 Valid Parenthesis String
-Link: https://leetcode.com/problems/valid-parenthesis-string/
+# 200418 #64 Minimum Path Sum
+Link: https://leetcode.com/problems/minimum-path-sum/
 
 ## Description
-Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. We define the validity of a string by these rules:
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
 
-    1. Any left parenthesis '(' must have a corresponding right parenthesis ')'.
-    2. Any right parenthesis ')' must have a corresponding left parenthesis '('.
-    3. Left parenthesis '(' must go before the corresponding right parenthesis ')'.
-    4. '*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
-    5. An empty string is also valid.
+Note: You can only move either down or right at any point in time.
 
-**Example 1:**
+Example:
 
-    Input: "()"
-    Output: True
-    
-**Example 2:**
-
-    Input: "(*)"
-    Output: True
-
-**Example 3:**
-
-    Input: "(*))"
-    Output: True
-
-**Note:** The string size will be in the range [1, 100].
+    Input:
+    [
+      [1,3,1],
+      [1,5,1],
+      [4,2,1]
+    ]
+    Output: 7
+    Explanation: Because the path 1→3→1→1→1 minimizes the sum.
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-If you traverse the list of strings from left, the number of "(" parenthesis should be always larger or same than the number of ")" and asterisks. Conversely, if you traverse the list from the right side, the number of ")" should be always larger or same than the number of the others. By single-passing the list, use two pointers that traverse from the left and right, respectively, count the numbers of "(", ")", and the asterisks, and see if two conditions that I described above are satisfied.
+Minimum sum of all numbers along its path (Minsum) to specific point A would be the smaller of the (Minsum to the point left to the point A + the number of A) or (Minsum to the point up to the point A + the number of A). This structure reminds me of greedy search. Here I updated the minimum number of specific point from the starting point to the end point iteratively.
 
 ### Code
 ```python
 class Solution:
-    def checkValidString(self, s: str) -> bool:
+    def minPathSum(self, grid: List[List[int]]) -> int:
         
-        cnt1, cnt2, idx, buf1, buf2, lens = 0,0,0,0,0, len(s)
-        while idx < lens:
-            if s[idx] == "(":
-                cnt1 += 1
-            elif s[idx] == ")":
-                cnt1 -= 1
-            elif s[idx] == "*":
-                buf1 += 1
-                
-            
-            if s[-idx-1] == ")":
-                cnt2 += 1
-            elif s[-idx-1] == "(":
-                cnt2 -= 1
-            elif s[-idx-1] == "*":
-                buf2 += 1
-            
-            if cnt1+buf1< 0 or cnt2+buf2< 0:
-                return False
-            
-            idx += 1
+        collen, rowlen = len(grid), len(grid[0])
         
-        if cnt1 > buf1:
-            return False
-        return True
+        for i in range(collen):
+            for j in range(rowlen):
+                if 0 <= i-1 and 0 <= j-1:
+                    tmp = min(grid[i-1][j], grid[i][j-1])
+                elif 0 <= i-1:
+                    tmp = grid[i-1][j]
+                elif 0 <= j-1:
+                    tmp = grid[i][j-1]
+                else:
+                    tmp = 0
+                grid[i][j] += tmp
+        
+        return grid[collen-1][rowlen-1]
 ```
 
 ### Results
-**Time complexity**: *O*(n) for single pass.
+**Time complexity**: *O*(n) for single pass of all the elements in the grid.
 
-**Space complexity**: *O*(1) for storing *cnt1, cnt2, buf1, buf2, idx, and lens*.
+**Space complexity**: *O*(1) for storing *collen, rowlen, and tmp* (except for the grid, which was previously given).
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200416%20%23678%20Valid%20Parenthesis%20String/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200418%20%2364%20Minimum%20Path%20Sum/1st%20trial.PNG)
