@@ -1,53 +1,63 @@
-# 200418 #64 Minimum Path Sum
-Link: https://leetcode.com/problems/minimum-path-sum/
+# 200420 #1008 Construct Binary Search Tree from Preorder Traversal
+Link: https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/
 
 ## Description
-Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+Return the root node of a binary search tree that matches the given preorder traversal.
 
-Note: You can only move either down or right at any point in time.
+(Recall that a binary search tree is a binary tree where for every node, any descendant of node.left has a value < node.val, and any descendant of node.right has a value > node.val.  Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
 
-Example:
+**Example 1:**
 
-    Input:
-    [
-      [1,3,1],
-      [1,5,1],
-      [4,2,1]
-    ]
-    Output: 7
-    Explanation: Because the path 1→3→1→1→1 minimizes the sum.
+    Input: [8,5,1,7,10,12]
+    Output: [8,5,10,1,7,null,12]
 
+**Note:**
+
+1 <= preorder.length <= 100
+The values of preorder are distinct.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Minimum sum of all numbers along its path (Minsum) to specific point A would be the smaller of the (Minsum to the point left to the point A + the number of A) or (Minsum to the point up to the point A + the number of A). This structure reminds me of greedy search. Here I updated the minimum number of specific point from the starting point to the end point iteratively.
+Here I first built the insert function to insert the values in the binary search tree. Then, for all the elements in preorder list, insert the element in the tree.
 
 ### Code
 ```python
 class Solution:
-    def minPathSum(self, grid: List[List[int]]) -> int:
+    def bstFromPreorder(self, preorder: List[int]) -> TreeNode:
         
-        collen, rowlen = len(grid), len(grid[0])
-        
-        for i in range(collen):
-            for j in range(rowlen):
-                if 0 <= i-1 and 0 <= j-1:
-                    tmp = min(grid[i-1][j], grid[i][j-1])
-                elif 0 <= i-1:
-                    tmp = grid[i-1][j]
-                elif 0 <= j-1:
-                    tmp = grid[i][j-1]
+        def insert(val, node):
+            j= True
+            while j:
+                if node.val > val:
+                    if not node.left:
+                        node.left = TreeNode(val)
+                        j = False
+                    else:
+                        node = node.left
                 else:
-                    tmp = 0
-                grid[i][j] += tmp
+                    if not node.right:
+                        node.right = TreeNode(val)
+                        j = False
+                    else:
+                        node = node.right
         
-        return grid[collen-1][rowlen-1]
+        if not preorder:
+            return None
+        
+        root = TreeNode(preorder.pop(0))
+                                
+        ans = root       
+        for i in range(len(preorder)):
+            ans = root
+            insert(preorder[i], ans)
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for single pass of all the elements in the grid.
+**Time complexity**: *O*(n) for single pass of all the elements in preorder.
 
-**Space complexity**: *O*(1) for storing *collen, rowlen, and tmp* (except for the grid, which was previously given).
+**Space complexity**: *O*(n) for storing *ans, root*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200418%20%2364%20Minimum%20Path%20Sum/1st%20trial.PNG)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200420%20%231008%20Construc%20Binary%20Search%20Tree%20from%20Preorder%20Traversal/1st%20trial.PNG)
