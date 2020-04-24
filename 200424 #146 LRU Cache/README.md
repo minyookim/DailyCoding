@@ -1,41 +1,65 @@
-# 200423 #201 Bitwise AND of Numbers Range
-Link: https://leetcode.com/problems/bitwise-and-of-numbers-range/
+# 200424 #146 LRU Cache
+Link: https://leetcode.com/problems/lru-cache/
 
 ## Description
-Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
 
-Example 1:
+    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
 
-    Input: [5,7]
-    Output: 4
+The cache is initialized with a positive capacity.
 
-Example 2:
+**Follow up:**
+Could you do both operations in O(1) time complexity?
 
-    Input: [0,1]
-    Output: 0
+**Example:**
+
+    LRUCache cache = new LRUCache( 2 /* capacity */ );
+
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cache.get(1);       // returns 1
+    cache.put(3, 3);    // evicts key 2
+    cache.get(2);       // returns -1 (not found)
+    cache.put(4, 4);    // evicts key 1
+    cache.get(1);       // returns -1 (not found)
+    cache.get(3);       // returns 3
+    cache.get(4);       // returns 4
+ 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-If m and n are not same in the larger bits, then the bitwise AND of all numbers in the range from m to n won't be same in the smaller bits. Therefore, check whether m and n are same while removing the lower bits, and if so, return the bits that m and n have in common would return the answer.
+
 
 ### Code
 ```python
-class Solution:
-    def rangeBitwiseAnd(self, m: int, n: int) -> int:        
-        cnt = 0
-        
-        while m != n:
-            cnt += 1
-            m >>= 1
-            n >>= 1
-            
-        return m << cnt
+class LRUCache:
+    from collections import OrderedDict
+
+    def __init__(self, capacity: int):
+        self.capa = capacity
+        self.dict = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.dict:
+            return -1
+        self.dict.move_to_end(key)
+        return self.dict[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key not in self.dict:
+            if len(self.dict) >= self.capa:
+                self.dict.popitem(last=False)
+            self.dict[key] = value
+        else:
+            self.dict.move_to_end(key)
+            self.dict[key] = value
 ```
 
 ### Results
-**Time complexity**: *O*(logn) for single pass of all bit digits.
+**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
 
-**Space complexity**: *O*(1) for storing *cnt*.
+**Space complexity**: *O*(n) for storing *self.dict*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200423%20%23201%20Bitwise%20AND%20of%20Numbers%20Range/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
