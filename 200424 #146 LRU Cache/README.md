@@ -30,7 +30,7 @@ Could you do both operations in O(1) time complexity?
 ## 1<sup>st</sup> trial
 
 ### Intuition
-
+OrderedDict data structure in Python can get and put values within O(1). Specifically, move_to_end and popitem function from OrderedDict will enable both operations in O(1) time complexity.
 
 ### Code
 ```python
