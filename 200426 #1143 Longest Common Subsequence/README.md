@@ -1,65 +1,70 @@
-# 200424 #146 LRU Cache
-Link: https://leetcode.com/problems/lru-cache/
+# 200426 #1143 Longest Common Subsequence
+Link: https://leetcode.com/problems/longest-common-subsequence/
 
 ## Description
-Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
+Given two strings text1 and text2, return the length of their longest common subsequence.
 
-    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
-    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+A subsequence of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters. (eg, "ace" is a subsequence of "abcde" while "aec" is not). A common subsequence of two strings is a subsequence that is common to both strings.
 
-The cache is initialized with a positive capacity.
+If there is no common subsequence, return 0.
 
-**Follow up:**
-Could you do both operations in O(1) time complexity?
+**Example 1:**
 
-**Example:**
+    Input: text1 = "abcde", text2 = "ace" 
+    Output: 3  
+    Explanation: The longest common subsequence is "ace" and its length is 3.
 
-    LRUCache cache = new LRUCache( 2 /* capacity */ );
+**Example 2:**
 
-    cache.put(1, 1);
-    cache.put(2, 2);
-    cache.get(1);       // returns 1
-    cache.put(3, 3);    // evicts key 2
-    cache.get(2);       // returns -1 (not found)
-    cache.put(4, 4);    // evicts key 1
-    cache.get(1);       // returns -1 (not found)
-    cache.get(3);       // returns 3
-    cache.get(4);       // returns 4
- 
+    Input: text1 = "abc", text2 = "abc"
+    Output: 3
+    Explanation: The longest common subsequence is "abc" and its length is 3.
+
+**Example 3:**
+
+    Input: text1 = "abc", text2 = "def"
+    Output: 0
+    Explanation: There is no such common subsequence, so the result is 0.
+
+
+**Constraints:**
+
+    1 <= text1.length <= 1000
+    1 <= text2.length <= 1000
+    The input strings consist of lowercase English characters only.
+
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
+This problem holds an optimal substructure property. If both sequences start with same letter, then longest common subsequence (LCS) will contain the first letter. If not, removing the letter from one sequence will still yield the same result. Generally speaking,
 
+LCS(Xi~m, Yi~n) = 
+1) Xi + LCS(Xi+1~m, Yi+1~m) (if Xi == Yi)
+2) max(LCS(Xi+1~m, Yi~m), LCS(Xi~m, Yi+1~m)) (if Xi != Yi)
+
+I used a table for dynamic programming.
 
 ### Code
 ```python
-class LRUCache:
-    from collections import OrderedDict
-
-    def __init__(self, capacity: int):
-        self.capa = capacity
-        self.dict = OrderedDict()
-
-    def get(self, key: int) -> int:
-        if key not in self.dict:
-            return -1
-        self.dict.move_to_end(key)
-        return self.dict[key]
-
-    def put(self, key: int, value: int) -> None:
-        if key not in self.dict:
-            if len(self.dict) >= self.capa:
-                self.dict.popitem(last=False)
-            self.dict[key] = value
-        else:
-            self.dict.move_to_end(key)
-            self.dict[key] = value
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        
+        tbl = [[0 for j in range(len(text2)+1)] for i in range(len(text1)+1)]
+        
+        for i in range(len(text1)):
+            for j in range(len(text2)):
+                if text1[i] == text2[j]:
+                    tbl[i+1][j+1] = tbl[i][j] + 1
+                else:
+                    tbl[i+1][j+1] = max(tbl[i][j+1], tbl[i+1][j])
+        
+        return tbl[-1][-1]
 ```
 
 ### Results
-**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
+**Time complexity**: *O*(nm) for moving over n X m elements in the *tbl*.
 
-**Space complexity**: *O*(n) for storing *self.dict*.
+**Space complexity**: *O*(nm) for storing n X m elements in the *tbl*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200426%20%231143%20Longest%20Common%20Subsequence/1st%20trial.png)
