@@ -19,7 +19,7 @@ Given a 2D binary matrix filled with 0's and 1's, find the largest square contai
 ## 1<sup>st</sup> trial
 
 ### Intuition
-
+While searching through every element in the matrix, if the element is "1", update the possible largest area, which include that element by checking the minimum value among the left, upper, and upper left elements. 
 
 ### Code
 ```python
