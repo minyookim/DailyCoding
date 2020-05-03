@@ -39,9 +39,9 @@ If there is no common subsequence, return 0.
 ### Intuition
 This problem holds an optimal substructure property. If both sequences start with same letter, then longest common subsequence (LCS) will contain the first letter. If not, removing the letter from one sequence will still yield the same result. Generally speaking,
 
-LCS(Xi~m, Yi~n) = 
-1) Xi + LCS(Xi+1~m, Yi+1~m) (if Xi == Yi)
-2) max(LCS(Xi+1~m, Yi~m), LCS(Xi~m, Yi+1~m)) (if Xi != Yi)
+LCS(Xi-m, Yi-n) = 
+1) Xi + LCS(Xi+1-m, Yi+1-m) (if Xi == Yi)
+2) max(LCS(Xi+1-m, Yi-m), LCS(Xi-m, Yi+1-m)) (if Xi != Yi)
 
 I used a table for dynamic programming.
 
