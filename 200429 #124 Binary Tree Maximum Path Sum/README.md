@@ -1,113 +1,66 @@
-# 200428 # First Unique Number
-Link: https://leetcode.com/problems/longest-common-subsequence/
+# 200429 #124 Binary Tree Maximum Path Sum
+Link: https://leetcode.com/problems/binary-tree-maximum-path-sum/
 
 ## Description
-You have a queue of integers, you need to retrieve the first unique integer in the queue.
+Given a non-empty binary tree, find the maximum path sum.
 
-Implement the FirstUnique class:
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
 
-FirstUnique(int[] nums) Initializes the object with the numbers in the queue.
-int showFirstUnique() returns the value of the first unique integer of the queue, and returns -1 if there is no such integer.
-void add(int value) insert value to the queue.
- 
 **Example 1:**
 
-    Input: 
-    ["FirstUnique","showFirstUnique","add","showFirstUnique","add","showFirstUnique","add","showFirstUnique"]
-    [[[2,3,5]],[],[5],[],[2],[],[3],[]]
-    
-    Output: 
-    [null,2,null,2,null,3,null,-1]
+    Input: [1,2,3]
 
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([2,3,5]);
-    firstUnique.showFirstUnique(); // return 2
-    firstUnique.add(5);            // the queue is now [2,3,5,5]
-    firstUnique.showFirstUnique(); // return 2
-    firstUnique.add(2);            // the queue is now [2,3,5,5,2]
-    firstUnique.showFirstUnique(); // return 3
-    firstUnique.add(3);            // the queue is now [2,3,5,5,2,3]
-    firstUnique.showFirstUnique(); // return -1
+           1
+          / \
+         2   3
+
+    Output: 6
 
 **Example 2:**
 
-    Input: 
-    ["FirstUnique","showFirstUnique","add","add","add","add","add","showFirstUnique"]
-    [[[7,7,7,7,7,7]],[],[7],[3],[3],[7],[17],[]]
-    
-    Output: 
-    [null,-1,null,null,null,null,null,17]
+    Input: [-10,9,20,null,null,15,7]
 
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([7,7,7,7,7,7]);
-    firstUnique.showFirstUnique(); // return -1
-    firstUnique.add(7);            // the queue is now [7,7,7,7,7,7,7]
-    firstUnique.add(3);            // the queue is now [7,7,7,7,7,7,7,3]
-    firstUnique.add(3);            // the queue is now [7,7,7,7,7,7,7,3,3]
-    firstUnique.add(7);            // the queue is now [7,7,7,7,7,7,7,3,3,7]
-    firstUnique.add(17);           // the queue is now [7,7,7,7,7,7,7,3,3,7,17]
-    firstUnique.showFirstUnique(); // return 17
+       -10
+       / \
+      9  20
+        /  \
+       15   7
 
-**Example 3:**
-
-    Input: 
-    ["FirstUnique","showFirstUnique","add","showFirstUnique"]
-    [[[809]],[],[809],[]]
-    
-    Output: 
-    [null,809,null,-1]
-
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([809]);
-    firstUnique.showFirstUnique(); // return 809
-    firstUnique.add(809);          // the queue is now [809,809]
-    firstUnique.showFirstUnique(); // return -1
-
- 
-
-**Constraints:**
-
-    1 <= nums.length <= 10^5
-    1 <= nums[i] <= 10^8
-    1 <= value <= 10^8
-    At most 50000 calls will be made to showFirstUnique and add.
+    Output: 42
 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
+Here, I used almost same algorithm that was used before (https://github.com/minyookim/DailyCoding/tree/master/200411%20%23543%20Diameter%20of%20Binary%20Tree), since the structure of the problem is quite similar between those two.
 
 ### Code
 ```python
-class FirstUnique:
-
-    from collections import deque
-    
-    def __init__(self, nums: List[int]):
-        self.list = deque()
-        self.dict = {}
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        ans = float('-inf')
         
-        for i in nums:
-            self.add(i)
+        def calPath(node):
+            if not node:
+                return 0
+            
+            nonlocal ans
+            pathL = calPath(node.left)
+            pathR = calPath(node.right)
+            currPath = max(pathL, pathR, 0) + node.val
+            candidate = node.val + max(pathL, 0) + max(pathR, 0)
+            ans = max(ans, candidate)
+            
+            return currPath
         
-    def showFirstUnique(self) -> int:
-        while self.list and self.dict[self.list[0]] > 1:
-            self.list.popleft()
-        if not self.list:
-            return -1
-        else: return self.list[0]
-
-    def add(self, value: int) -> None:
-        if value in self.dict:
-            self.dict[value] += 1
-        else: 
-            self.dict[value] = 1
-            self.list.append(value)
+        calPath(root)
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for initialization, *O*(1) for showFirstUnique and add function.
+**Time complexity**: *O*(n) for single pass every node.
 
-**Space complexity**: *O*(n) for storing approximately n elements in the *self.dict and self.list*.
+**Space complexity**: *O*(1) for ans, pathL, pathR, currPath, and candidate.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200428%20%23%20First%20Unique%20Number/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200429%20%23124%20Binary%20Tree%20Maximum%20Path%20Sum/1st%20trial.png)
