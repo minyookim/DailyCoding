@@ -76,6 +76,11 @@ void add(int value) insert value to the queue.
 ## 1<sup>st</sup> trial
 
 ### Intuition
+To implement FirstUnique class, the first and perhaps the most important thingis to choose the data structure that supports the optimal time and space complexity.
+
+To check whether the value was already present in the existing data within O(1) time, I used the dictionary.
+
+To remove the first inputs and to append the last inputs within O(1) time, I used the deque.
 
 ### Code
 ```python
