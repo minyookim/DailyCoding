@@ -1,65 +1,45 @@
-# 200424 #146 LRU Cache
-Link: https://leetcode.com/problems/lru-cache/
+# 200430 # Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree
+Link: https://leetcode.com/problems/check-if-a-string-is-a-valid-sequence-from-root-to-leaves-path-in-a-binary-tree/
 
 ## Description
-Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
+Given a binary tree where each path going from the root to any leaf form a valid sequence, check if a given string is a valid sequence in such binary tree.
 
-    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
-    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+We get the given string from the concatenation of an array of integers arr and the concatenation of all values of the nodes along a path results in a sequence in the given binary tree.
 
-The cache is initialized with a positive capacity.
+**Example1**
 
-**Follow up:**
-Could you do both operations in O(1) time complexity?
+    Input: root = [0,1,0,0,1,0,null,null,1,0,0], arr = [0,1,0,1]
+    Output: true
+    Explanation: 
+    The path 0 -> 1 -> 0 -> 1 is a valid sequence (green color in the figure). 
 
-**Example:**
+    Other valid sequences are: 
+    0 -> 1 -> 1 -> 0 
+    0 -> 0 -> 0
 
-    LRUCache cache = new LRUCache( 2 /* capacity */ );
+**Example2**
 
-    cache.put(1, 1);
-    cache.put(2, 2);
-    cache.get(1);       // returns 1
-    cache.put(3, 3);    // evicts key 2
-    cache.get(2);       // returns -1 (not found)
-    cache.put(4, 4);    // evicts key 1
-    cache.get(1);       // returns -1 (not found)
-    cache.get(3);       // returns 3
-    cache.get(4);       // returns 4
- 
+    Input: root = [0,1,0,0,1,0,null,null,1,0,0], arr = [0,0,1]
+    Output: false 
+    Explanation: The path 0 -> 0 -> 1 does not exist, therefore it is not even a sequence.
+
+**Example3**
+
+    Input: root = [0,1,0,0,1,0,null,null,1,0,0], arr = [0,1,1]
+    Output: false
+    Explanation: The path 0 -> 1 -> 1 is a sequence, but it is not a valid sequence.
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-
+I cannot access to my code anymore, since this was the problem that is exposed only to a premium user.
 
 ### Code
-```python
-class LRUCache:
-    from collections import OrderedDict
-
-    def __init__(self, capacity: int):
-        self.capa = capacity
-        self.dict = OrderedDict()
-
-    def get(self, key: int) -> int:
-        if key not in self.dict:
-            return -1
-        self.dict.move_to_end(key)
-        return self.dict[key]
-
-    def put(self, key: int, value: int) -> None:
-        if key not in self.dict:
-            if len(self.dict) >= self.capa:
-                self.dict.popitem(last=False)
-            self.dict[key] = value
-        else:
-            self.dict.move_to_end(key)
-            self.dict[key] = value
-```
+I cannot access to my code anymore, since this was the problem that is exposed only to a premium user.
 
 ### Results
-**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
+**Time complexity**: *O*(n) for single passing all the possible node.
 
 **Space complexity**: *O*(n) for storing *self.dict*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200430%20%23%20Check%20If%20a%20String%20Is%20a%20Valid%20Sequence%20from%20Root%20to%20Leaves%20Path%20in%20a%20Binary%20Tree/1st%20trial.png)
