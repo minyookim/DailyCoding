@@ -1,5 +1,5 @@
 # 200428 # First Unique Number
-Link: https://leetcode.com/problems/longest-common-subsequence/
+Link: https://leetcode.com/problems/first-unique-number/
 
 ## Description
 You have a queue of integers, you need to retrieve the first unique integer in the queue.
