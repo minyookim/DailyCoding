@@ -1,45 +1,47 @@
-# 200502 #771 Jewels and Stones
-Link: https://leetcode.com/problems/jewels-and-stones/
+# 200503 #383 Ransom Note
+Link: https://leetcode.com/problems/ransom-note/
 
 ## Description
-You're given strings J representing the types of stones that are jewels, and S representing the stones you have.  Each character in S is a type of stone you have.  You want to know how many of the stones you have are also jewels.
+Given an arbitrary ransom note string and another string containing letters from all the magazines, write a function that will return true if the ransom note can be constructed from the magazines ; otherwise, it will return false.
 
-The letters in J are guaranteed distinct, and all characters in J and S are letters. Letters are case sensitive, so "a" is considered a different type of stone from "A".
+Each letter in the magazine string can only be used once in your ransom note.
 
-**Example 1:**
+**Note:**
 
-    Input: J = "aA", S = "aAAbbbb"
-    Output: 3
-**Example 2:**
+    You may assume that both strings contain only lowercase letters.
 
-    Input: J = "z", S = "ZZ"
-    Output: 0
+    canConstruct("a", "b") -> false
+    canConstruct("aa", "ab") -> false
+    canConstruct("aa", "aab") -> true
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-For every element in J, store the element in dictionary to enable searching within O(1).
-Then, while iterating through every elements in S, if the element is in the dictionary, increment the answer by 1.
+First, generate the Counter for the magazine. Then, while iterating through all the letters in ransomNote, check whether the letter is in the Counter and if so, reduce the number of Counter. If the letter is not in the Counter or the count in the Counter is less than 0, return False. 
 
 ### Code
 ```python
 class Solution:
-    def numJewelsInStones(self, J: str, S: str) -> int:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        from collections import Counter
         
-        ans, jewels = 0, {}
-        for i in J:
-            jewels[i] = 1
+        dic = Counter(magazine)
         
-        for j in S:
-            if j in jewels:
-                ans += 1
+        for i in ransomNote:
+            if i in dic:
+                if dic[i] <= 0:
+                    return False
+                else:
+                    dic[i] -= 1
+            else:
+                return False
         
-        return ans
+        return True
 ```
 
 ### Results
-**Time complexity**: *O*(n) for single pass.
+**Time complexity**: *O*(n) for single pass of the ransomNote and making the Counter for the magazine.
 
-**Space complexity**: *O*(n) for storing the jewels dictionary.
+**Space complexity**: *O*(n) for storing dic.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200502%20%23771%20Jewels%20and%20Stones/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200503%20%23383%20Ransom%20Note/1st%20trial.png)
