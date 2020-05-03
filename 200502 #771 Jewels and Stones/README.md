@@ -1,113 +1,45 @@
-# 200428 # First Unique Number
-Link: https://leetcode.com/problems/longest-common-subsequence/
+# 200502 #771 Jewels and Stones
+Link: https://leetcode.com/problems/jewels-and-stones/
 
 ## Description
-You have a queue of integers, you need to retrieve the first unique integer in the queue.
+You're given strings J representing the types of stones that are jewels, and S representing the stones you have.  Each character in S is a type of stone you have.  You want to know how many of the stones you have are also jewels.
 
-Implement the FirstUnique class:
+The letters in J are guaranteed distinct, and all characters in J and S are letters. Letters are case sensitive, so "a" is considered a different type of stone from "A".
 
-FirstUnique(int[] nums) Initializes the object with the numbers in the queue.
-int showFirstUnique() returns the value of the first unique integer of the queue, and returns -1 if there is no such integer.
-void add(int value) insert value to the queue.
- 
 **Example 1:**
 
-    Input: 
-    ["FirstUnique","showFirstUnique","add","showFirstUnique","add","showFirstUnique","add","showFirstUnique"]
-    [[[2,3,5]],[],[5],[],[2],[],[3],[]]
-    
-    Output: 
-    [null,2,null,2,null,3,null,-1]
-
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([2,3,5]);
-    firstUnique.showFirstUnique(); // return 2
-    firstUnique.add(5);            // the queue is now [2,3,5,5]
-    firstUnique.showFirstUnique(); // return 2
-    firstUnique.add(2);            // the queue is now [2,3,5,5,2]
-    firstUnique.showFirstUnique(); // return 3
-    firstUnique.add(3);            // the queue is now [2,3,5,5,2,3]
-    firstUnique.showFirstUnique(); // return -1
-
+    Input: J = "aA", S = "aAAbbbb"
+    Output: 3
 **Example 2:**
 
-    Input: 
-    ["FirstUnique","showFirstUnique","add","add","add","add","add","showFirstUnique"]
-    [[[7,7,7,7,7,7]],[],[7],[3],[3],[7],[17],[]]
-    
-    Output: 
-    [null,-1,null,null,null,null,null,17]
-
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([7,7,7,7,7,7]);
-    firstUnique.showFirstUnique(); // return -1
-    firstUnique.add(7);            // the queue is now [7,7,7,7,7,7,7]
-    firstUnique.add(3);            // the queue is now [7,7,7,7,7,7,7,3]
-    firstUnique.add(3);            // the queue is now [7,7,7,7,7,7,7,3,3]
-    firstUnique.add(7);            // the queue is now [7,7,7,7,7,7,7,3,3,7]
-    firstUnique.add(17);           // the queue is now [7,7,7,7,7,7,7,3,3,7,17]
-    firstUnique.showFirstUnique(); // return 17
-
-**Example 3:**
-
-    Input: 
-    ["FirstUnique","showFirstUnique","add","showFirstUnique"]
-    [[[809]],[],[809],[]]
-    
-    Output: 
-    [null,809,null,-1]
-
-    Explanation: 
-    FirstUnique firstUnique = new FirstUnique([809]);
-    firstUnique.showFirstUnique(); // return 809
-    firstUnique.add(809);          // the queue is now [809,809]
-    firstUnique.showFirstUnique(); // return -1
-
- 
-
-**Constraints:**
-
-    1 <= nums.length <= 10^5
-    1 <= nums[i] <= 10^8
-    1 <= value <= 10^8
-    At most 50000 calls will be made to showFirstUnique and add.
-
+    Input: J = "z", S = "ZZ"
+    Output: 0
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
+For every element in J, store the element in dictionary to enable searching within O(1).
+Then, while iterating through every elements in S, if the element is in the dictionary, increment the answer by 1.
 
 ### Code
 ```python
-class FirstUnique:
-
-    from collections import deque
-    
-    def __init__(self, nums: List[int]):
-        self.list = deque()
-        self.dict = {}
+class Solution:
+    def numJewelsInStones(self, J: str, S: str) -> int:
         
-        for i in nums:
-            self.add(i)
+        ans, jewels = 0, {}
+        for i in J:
+            jewels[i] = 1
         
-    def showFirstUnique(self) -> int:
-        while self.list and self.dict[self.list[0]] > 1:
-            self.list.popleft()
-        if not self.list:
-            return -1
-        else: return self.list[0]
-
-    def add(self, value: int) -> None:
-        if value in self.dict:
-            self.dict[value] += 1
-        else: 
-            self.dict[value] = 1
-            self.list.append(value)
+        for j in S:
+            if j in jewels:
+                ans += 1
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(n) for initialization, *O*(1) for showFirstUnique and add function.
+**Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: *O*(n) for storing approximately n elements in the *self.dict and self.list*.
+**Space complexity**: *O*(n) for storing the jewels dictionary.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200428%20%23%20First%20Unique%20Number/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200502%20%23771%20Jewels%20and%20Stones/1st%20trial.png)
