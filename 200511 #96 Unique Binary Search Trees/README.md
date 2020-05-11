@@ -1,65 +1,46 @@
-# 200424 #146 LRU Cache
+# 200511 #96 Unique Binary Search Trees
 Link: https://leetcode.com/problems/lru-cache/
 
 ## Description
-Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
-
-    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
-    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
-
-The cache is initialized with a positive capacity.
-
-**Follow up:**
-Could you do both operations in O(1) time complexity?
+Given n, how many structurally unique BST's (binary search trees) that store values 1 ... n?
 
 **Example:**
 
-    LRUCache cache = new LRUCache( 2 /* capacity */ );
+    Input: 3
+    Output: 5
+    Explanation:
+    Given n = 3, there are a total of 5 unique BST's:
 
-    cache.put(1, 1);
-    cache.put(2, 2);
-    cache.get(1);       // returns 1
-    cache.put(3, 3);    // evicts key 2
-    cache.get(2);       // returns -1 (not found)
-    cache.put(4, 4);    // evicts key 1
-    cache.get(1);       // returns -1 (not found)
-    cache.get(3);       // returns 3
-    cache.get(4);       // returns 4
- 
+       1         3     3      2      1
+        \       /     /      / \      \
+         3     2     1      1   3      2
+        /     /       \                 \
+       2     1         2                 3
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
+Structurally different BSTs originate from the sequence of the inputs and there are n! numbers of the sequences for n integers, so you may think that the regularities underlying the answer may be expressed with factorials. 
 
+If you put n from 1 to 6, the answer will be 1, 2, 5, 14, 42, 132, which are Catalan numbers from combinatorics. Catalan numbers can be calculated using the expression (2n)!/n!(n+1)!
 
 ### Code
 ```python
-class LRUCache:
-    from collections import OrderedDict
+import math
 
-    def __init__(self, capacity: int):
-        self.capa = capacity
-        self.dict = OrderedDict()
-
-    def get(self, key: int) -> int:
-        if key not in self.dict:
-            return -1
-        self.dict.move_to_end(key)
-        return self.dict[key]
-
-    def put(self, key: int, value: int) -> None:
-        if key not in self.dict:
-            if len(self.dict) >= self.capa:
-                self.dict.popitem(last=False)
-            self.dict[key] = value
-        else:
-            self.dict.move_to_end(key)
-            self.dict[key] = value
+class Solution:
+    def numTrees(self, n: int) -> int:
+        
+        ans = int(math.factorial(2*n)/(math.factorial(n)*math.factorial(n+1)))
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
+**Time complexity**: *O*(n) for calculating math.factorial?
 
-**Space complexity**: *O*(n) for storing *self.dict*.
+**Space complexity**: *O*(1) for storing *ans*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200511%20%2396%20Unique%20Binary%20Search%20Trees/1st%20trial.png)
+
+### Discussion
+Memoization methods with global variable may help reduce the time spent on the calculation of the factorials.
