@@ -1,65 +1,44 @@
-# 200424 #146 LRU Cache
-Link: https://leetcode.com/problems/lru-cache/
+# 200513 #448 Find All Numbers Disappeared in an Array
+Link: https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
 
 ## Description
-Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
+Given an array of integers where 1 ≤ a[i] ≤ n (n = size of array), some elements appear twice and others appear once.
 
-    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
-    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+Find all the elements of [1, n] inclusive that do not appear in this array.
 
-The cache is initialized with a positive capacity.
+Could you do it without extra space and in O(n) runtime? You may assume the returned list does not count as extra space.
 
-**Follow up:**
-Could you do both operations in O(1) time complexity?
+    Example:
 
-**Example:**
+    Input:
+    [4,3,2,7,8,2,3,1]
 
-    LRUCache cache = new LRUCache( 2 /* capacity */ );
+    Output:
+    [5,6]
 
-    cache.put(1, 1);
-    cache.put(2, 2);
-    cache.get(1);       // returns 1
-    cache.put(3, 3);    // evicts key 2
-    cache.get(2);       // returns -1 (not found)
-    cache.put(4, 4);    // evicts key 1
-    cache.get(1);       // returns -1 (not found)
-    cache.get(3);       // returns 3
-    cache.get(4);       // returns 4
- 
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-
+After making a set of nums, if an element (that spans from 1 to n) is not in the set, append the element in the answer array.
 
 ### Code
 ```python
-class LRUCache:
-    from collections import OrderedDict
-
-    def __init__(self, capacity: int):
-        self.capa = capacity
-        self.dict = OrderedDict()
-
-    def get(self, key: int) -> int:
-        if key not in self.dict:
-            return -1
-        self.dict.move_to_end(key)
-        return self.dict[key]
-
-    def put(self, key: int, value: int) -> None:
-        if key not in self.dict:
-            if len(self.dict) >= self.capa:
-                self.dict.popitem(last=False)
-            self.dict[key] = value
-        else:
-            self.dict.move_to_end(key)
-            self.dict[key] = value
+class Solution:
+    def findDisappearedNumbers(self, nums: List[int]) -> List[int]:
+        
+        lenN, ans, nums = len(nums), [], set(nums)
+        
+        for i in range(1,lenN+1):
+            if i not in nums:
+                ans.append(i)
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
+**Time complexity**: *O*(n) for single pass of every numbers from 1 to n.
 
-**Space complexity**: *O*(n) for storing *self.dict*.
+**Space complexity**: *O*(1) for storing *lenN* (except the returned list *ans*).
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200513%20%23448%20Find%20All%20Numbers%20Disappeared%20in%20an%20Array/1st%20trial.png)
