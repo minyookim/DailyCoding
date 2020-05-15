@@ -1,65 +1,61 @@
-# 200424 #146 LRU Cache
-Link: https://leetcode.com/problems/lru-cache/
+# 200515 #34 Find First and Last Position of Element in Sorted Array
+Link: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 
 ## Description
-Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
+Given an array of integers nums sorted in ascending order, find the starting and ending position of a given target value.
 
-    get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
-    put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+Your algorithm's runtime complexity must be in the order of O(log n).
 
-The cache is initialized with a positive capacity.
+If the target is not found in the array, return [-1, -1].
 
-**Follow up:**
-Could you do both operations in O(1) time complexity?
+**Example 1:**
 
-**Example:**
+    Input: nums = [5,7,7,8,8,10], target = 8
+    Output: [3,4]
 
-    LRUCache cache = new LRUCache( 2 /* capacity */ );
+**Example 2:**
 
-    cache.put(1, 1);
-    cache.put(2, 2);
-    cache.get(1);       // returns 1
-    cache.put(3, 3);    // evicts key 2
-    cache.get(2);       // returns -1 (not found)
-    cache.put(4, 4);    // evicts key 1
-    cache.get(1);       // returns -1 (not found)
-    cache.get(3);       // returns 3
-    cache.get(4);       // returns 4
- 
+    Input: nums = [5,7,7,8,8,10], target = 6
+    Output: [-1,-1]
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-
+Here I used binary search twice to find the leftmost index and rightmost index of the targets.
 
 ### Code
 ```python
-class LRUCache:
-    from collections import OrderedDict
-
-    def __init__(self, capacity: int):
-        self.capa = capacity
-        self.dict = OrderedDict()
-
-    def get(self, key: int) -> int:
-        if key not in self.dict:
-            return -1
-        self.dict.move_to_end(key)
-        return self.dict[key]
-
-    def put(self, key: int, value: int) -> None:
-        if key not in self.dict:
-            if len(self.dict) >= self.capa:
-                self.dict.popitem(last=False)
-            self.dict[key] = value
-        else:
-            self.dict.move_to_end(key)
-            self.dict[key] = value
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        
+        start, end = 0, len(nums)
+        
+        while start < end:
+            mid = (start + end) // 2
+            if nums[mid] >= target:
+                end = mid
+            else:
+                start = mid + 1
+        
+        if start == len(nums) or nums[start] != target:
+            return [-1, -1]
+        
+        ans = [start, 0]
+        start, end = 0, len(nums)
+        
+        while start < end:
+            mid = (start + end) // 2
+            if nums[mid] > target:
+                end = mid
+            else: start = mid + 1
+        ans[1] = start - 1
+        
+        return ans
 ```
 
 ### Results
-**Time complexity**: *O*(1) for getting the key and putting the value into the dictionary.
+**Time complexity**: *O*(log n) for performing binary search twice.
 
-**Space complexity**: *O*(n) for storing *self.dict*.
+**Space complexity**: *O*(1) for storing *ans, start, end, and mid*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200424%20%23146%20LRU%20Cache/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200515%20%2334%20Find%20First%20and%20Last%20Position%20of%20Element%20in%20Sorted%20Array/1st%20trial.png)
