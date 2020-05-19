@@ -1,38 +1,66 @@
-# 200518 #215 Kth Largest Element in an Array
-Link: https://leetcode.com/problems/kth-largest-element-in-an-array/
+# 200519 #75 Sort Colors
+Link: https://leetcode.com/problems/sort-colors/
 
 ## Description
-Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+Given an array with n objects colored red, white or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white and blue.
 
-**Example 1:**
+Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.
 
-    Input: [3,2,1,5,6,4] and k = 2
-    Output: 5
+**Note:** You are not suppose to use the library's sort function for this problem.
 
-**Example 2:**
+**Example:**
 
-    Input: [3,2,3,1,2,4,5,5,6] and k = 4
-    Output: 4
+    Input: [2,0,2,1,1,0]
+    Output: [0,0,1,1,2,2]
 
-**Note:**
-You may assume k is always valid, 1 ≤ k ≤ array's length.
+**Follow up:**
+
+A rather straight forward solution is a two-pass algorithm using counting sort.
+First, iterate the array counting number of 0's, 1's, and 2's, then overwrite array with total number of 0's, then 1's and followed by 2's.
+Could you come up with a one-pass algorithm using only constant space?
 
 ## 1<sup>st</sup> trial
 
 ### Intuition
-Perhaps the easiest solution may be the solution that first sort the array and return the k-th element.
+To implement the single-pass algorithm, I used three pointers that indicate the location of insertion. Here, the algorithms checks the value of current element, replace the value, and then move the pointers accordingly
 
 ### Code
 ```python
 class Solution:
-    def findKthLargest(self, nums: List[int], k: int) -> int:
-        nums.sort()        
-        return nums[-k]
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        
+        a, b, c = 0, 0, 0
+        
+        for i in nums:
+            
+            if i == 0:
+                nums[a] = 0
+                if a != b:
+                    nums[b] = 1
+                if b != c:
+                    nums[c] = 2
+                a += 1
+                b += 1
+                c += 1
+                
+            if i == 1:
+                nums[b] = 1
+                if b != c:
+                    nums[c] = 2
+                b += 1
+                c += 1
+                
+            if i == 2:
+                nums[c] = 2
+                c += 1
 ```
 
 ### Results
-**Time complexity**: *O*(nlogn) for sorting the array.
+**Time complexity**: *O*(n) for single pass.
 
-**Space complexity**: I didn't use any extra memories.
+**Space complexity**: *O*(1) for storing *a, b, c*.
 
-![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200518%20%23215%20Kth%20Largest%20Element%20in%20an%20Array/1st%20trial.png)
+![1st trial](https://github.com/minyookim/DailyCoding/blob/master/200519%20%2375%20Sort%20Colors/1st%20trial.png)
